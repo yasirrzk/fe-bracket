@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Vintage Warm Parchment Theme (Default: Autentik Kertas & Poster Retro) */
+  --nb-bg: #EAE1D0;        /* Warm aged paper canvas - vintage, soft, not blinding white */
+  --nb-card: #FAF6ED;      /* Antique cream card surface */
+  --nb-card-alt: #DDD2BC;  /* Kraft paper tan surface for rows and inputs */
+  --nb-card-hover: #F2EADA;/* Hover surface */
+  --nb-text: #1C1917;      /* Deep retro ink text */
+  --nb-muted: #6B6152;     /* Aged graphite / sepia text */
+  --nb-border: #181512;    /* Dark ink brutalist border */
+  --nb-yellow: #DFA837;    /* Vintage 70s Mustard Gold */
+  --nb-yellow-hover: #CD9425;
+  --nb-red: #BA4A35;       /* Vintage Terracotta Brick */
+  --nb-green: #547746;     /* Vintage Olive Moss */
+  --nb-blue: #44697A;      /* Vintage Dusty Denim */
+}
+
+[data-theme="vintage-dark"] {
+  /* Vintage Dark Sepia Theme (Opsi Retro Gelap: Roasted Coffee & Warm Tobacco) */
+  --nb-bg: #1F1C19;        /* Warm roasted espresso */
+  --nb-card: #2B2622;      /* Vintage dark tobacco */
+  --nb-card-alt: #3A342E;  /* Aged walnut */
+  --nb-card-hover: #332C26;
+  --nb-text: #F5EEE2;      /* Warm cream text on dark */
+  --nb-muted: #A39786;     /* Sepia muted text */
+  --nb-border: #000000;
+  --nb-yellow: #E5A83B;
+  --nb-yellow-hover: #D19628;
+  --nb-red: #C8523F;
+  --nb-green: #6F9254;
+  --nb-blue: #5B8296;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  background-color: var(--nb-bg);
+  color: var(--nb-text);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: var(--nb-bg);
+  border-left: 2px solid var(--nb-border);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--nb-yellow);
+  border: 2px solid var(--nb-border);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nb-yellow-hover);
+}
+
+/* Vintage Neobrutalist Primitives */
+.neo-box {
+  background: var(--nb-card);
+  color: var(--nb-text);
+  border: 3px solid var(--nb-border);
+  box-shadow: 4px 4px 0px 0px var(--nb-border);
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 150ms ease;
+}
+
+.neo-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px var(--nb-border);
+}
+
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  border: 3px solid var(--nb-border);
+  background: var(--nb-yellow);
+  color: #000000;
+  padding: 0.5rem 1.125rem;
+  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease, background-color 80ms ease;
+}
+
+.neo-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px var(--nb-border);
+  background: var(--nb-yellow-hover);
+}
+
+.neo-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px var(--nb-border);
+}
+
+.neo-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0px 0px var(--nb-border);
+}
+
+.neo-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  border: 3px solid var(--nb-border);
+  background: var(--nb-card-alt);
+  color: var(--nb-text);
+  padding: 0.5rem 1.125rem;
+  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease, background-color 80ms ease;
+}
+
+.neo-btn-secondary:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px var(--nb-border);
+  background: var(--nb-card-hover);
+}
+
+.neo-btn-secondary:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px var(--nb-border);
+}
+
+.neo-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  border: 3px solid var(--nb-border);
+  background: var(--nb-red);
+  color: #FAF6ED;
+  padding: 0.5rem 1.125rem;
+  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.neo-btn-danger:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px var(--nb-border);
+  opacity: 0.95;
+}
+
+.neo-input {
+  width: 100%;
+  background: var(--nb-card-alt);
+  color: var(--nb-text);
+  border: 3px solid var(--nb-border);
+  padding: 0.625rem 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  outline: none;
+  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  transition: box-shadow 100ms ease, border-color 100ms ease, background-color 100ms ease;
+}
+
+.neo-input:focus {
+  box-shadow: 4px 4px 0px 0px var(--nb-yellow);
+  border-color: var(--nb-border);
+  background: var(--nb-card);
+}
+
+.neo-input::placeholder {
+  color: var(--nb-muted);
+  font-weight: 500;
+}
