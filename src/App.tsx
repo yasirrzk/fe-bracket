@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider, useNotification } from './context/NotificationContext';
 import { Header } from './components/common/Header';
@@ -8,16 +8,12 @@ import { SessionExpiredModal } from './components/common/SessionExpiredModal';
 import { RateLimitIndicator } from './components/common/RateLimitIndicator';
 import { TelemetryDrawer } from './components/telemetry/TelemetryDrawer';
 import { AuthModal } from './components/auth/AuthModal';
-import { TournamentList } from './components/tournaments/TournamentList';
-import { TournamentDetail } from './components/tournaments/TournamentDetail';
-import { CreateTournamentModal } from './components/tournaments/CreateTournamentModal';
 import { LeagueList } from './components/leagues/LeagueList';
 import { LeagueDetail } from './components/leagues/LeagueDetail';
 import { CreateLeagueModal } from './components/leagues/CreateLeagueModal';
-import { api, simulatedEngine } from './services/api';
+import { api } from './services/api';
 import { leagueService } from './services/leagueService';
-import { Tournament } from './types/tournament';
-import { RotateCcw, ShieldCheck, Eye, Trophy, TableProperties } from 'lucide-react';
+import { RotateCcw, ShieldCheck, Eye, TableProperties } from 'lucide-react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,90 +24,39 @@ const queryClient = new QueryClient({
   },
 });
 
-const TournamentAppContent: React.FC = () => {
-  const [activeView, setActiveView] = useState<'tournaments' | 'leagues'>(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('view') === 'leagues' ? 'leagues' : 'tournaments';
-  });
-
-  const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('tournament') || null;
-  });
-
+const LeagueAppContent: React.FC = () => {
   const [selectedLeagueId, setSelectedLeagueId] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('league') || null;
   });
 
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateLeagueModalOpen, setIsCreateLeagueModalOpen] = useState(false);
   const [leagueRefreshKey, setLeagueRefreshKey] = useState(0);
 
   const { showToast } = useNotification();
   const { isAdmin } = useAuth();
 
-  const updateUrl = (view: 'tournaments' | 'leagues', tId: string | null, lId: string | null) => {
+  const updateUrl = (lId: string | null) => {
     const params = new URLSearchParams();
-    if (view === 'leagues') {
-      params.set('view', 'leagues');
-      if (lId) params.set('league', lId);
-    } else {
-      if (tId) params.set('tournament', tId);
-    }
+    if (lId) params.set('league', lId);
     const queryStr = params.toString();
     const url = queryStr ? `?${queryStr}` : window.location.pathname;
     window.history.replaceState(null, '', url);
   };
 
-  const handleViewChange = (view: 'tournaments' | 'leagues') => {
-    setActiveView(view);
-    updateUrl(view, selectedTournamentId, selectedLeagueId);
-  };
-
-  const handleSelectTournament = (id: string | null) => {
-    setSelectedTournamentId(id);
-    updateUrl('tournaments', id, selectedLeagueId);
-  };
-
   const handleSelectLeague = (id: string | null) => {
     setSelectedLeagueId(id);
-    updateUrl('leagues', selectedTournamentId, id);
+    updateUrl(id);
   };
 
-  // Query tournaments list
-  const {
-    data: tournaments = [],
-    isLoading,
-    refetch: refetchTournaments,
-  } = useQuery<Tournament[]>({
-    queryKey: ['tournaments'],
-    queryFn: () => api.getTournaments(),
-  });
-
-  // Query selected tournament detail
-  const {
-    data: selectedTournament,
-    refetch: refetchDetail,
-  } = useQuery<Tournament | null>({
-    queryKey: ['tournament', selectedTournamentId],
-    queryFn: () => (selectedTournamentId ? api.getTournamentById(selectedTournamentId) : null),
-    enabled: !!selectedTournamentId,
-  });
-
   const handleRefresh = useCallback(() => {
-    refetchTournaments();
-    if (selectedTournamentId) {
-      refetchDetail();
-    }
     setLeagueRefreshKey((k) => k + 1);
-  }, [refetchTournaments, selectedTournamentId, refetchDetail]);
+  }, []);
 
   const handleResetSimulatedDB = () => {
-    simulatedEngine.reset();
     leagueService.reset();
     handleRefresh();
-    showToast('info', 'Database Reset', 'Simulated Tournament & League Engine berhasil dikembalikan ke status awal.');
+    showToast('info', 'Database Dikosongkan', 'Seluruh data liga berhasil dikosongkan.');
   };
 
   return (
@@ -122,15 +67,6 @@ const TournamentAppContent: React.FC = () => {
       <RateLimitIndicator />
       <AuthModal />
 
-      <CreateTournamentModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={(newId) => {
-          handleRefresh();
-          handleSelectTournament(newId);
-        }}
-      />
-
       <CreateLeagueModal
         isOpen={isCreateLeagueModalOpen}
         onClose={() => setIsCreateLeagueModalOpen(false)}
@@ -140,24 +76,10 @@ const TournamentAppContent: React.FC = () => {
         }}
       />
 
-      {/* Main Top Header with Primary Switcher */}
+      {/* Main Top Header */}
       <Header
-        activeView={activeView}
-        onViewChange={handleViewChange}
-        onOpenCreateModal={() => {
-          if (activeView === 'tournaments') {
-            setIsCreateModalOpen(true);
-          } else {
-            setIsCreateLeagueModalOpen(true);
-          }
-        }}
-        onHomeClick={() => {
-          if (activeView === 'tournaments') {
-            handleSelectTournament(null);
-          } else {
-            handleSelectLeague(null);
-          }
-        }}
+        onOpenCreateModal={() => setIsCreateLeagueModalOpen(true)}
+        onHomeClick={() => handleSelectLeague(null)}
         onRefresh={handleRefresh}
       />
 
@@ -172,15 +94,7 @@ const TournamentAppContent: React.FC = () => {
             <div className="flex items-center gap-2 font-bold">
               <span className="text-nb-muted">Mode Aktif:</span>
               <span className="px-2 py-0.5 bg-nb-yellow text-black border-2 border-black font-black flex items-center gap-1 shadow-brutal-sm">
-                {activeView === 'tournaments' ? (
-                  <>
-                    <Trophy className="w-3.5 h-3.5" /> Turnamen Knockout
-                  </>
-                ) : (
-                  <>
-                    <TableProperties className="w-3.5 h-3.5" /> Liga Round-Robin
-                  </>
-                )}
+                <TableProperties className="w-3.5 h-3.5" /> Liga Round-Robin & Klasemen
               </span>
             </div>
             <span className="text-nb-muted/40 hidden sm:inline">|</span>
@@ -209,34 +123,16 @@ const TournamentAppContent: React.FC = () => {
             <button
               onClick={handleResetSimulatedDB}
               className="neo-btn-secondary text-[11px] py-1.5 px-3 flex items-center gap-1.5 font-bold"
-              title="Reset data tanding simulated engine"
+              title="Kosongkan seluruh data liga"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Data Demo</span>
+              <span>Kosongkan Data</span>
             </button>
           </div>
         </div>
 
         {/* Dynamic View Content */}
-        {activeView === 'tournaments' ? (
-          selectedTournamentId && selectedTournament ? (
-            <TournamentDetail
-              tournament={selectedTournament}
-              onBack={() => {
-                handleSelectTournament(null);
-                refetchTournaments();
-              }}
-              onRefresh={handleRefresh}
-            />
-          ) : (
-            <TournamentList
-              tournaments={tournaments}
-              isLoading={isLoading}
-              onSelectTournament={(id) => handleSelectTournament(id)}
-              onOpenCreateModal={() => setIsCreateModalOpen(true)}
-            />
-          )
-        ) : selectedLeagueId ? (
+        {selectedLeagueId ? (
           <LeagueDetail
             key={`${selectedLeagueId}-${leagueRefreshKey}`}
             leagueId={selectedLeagueId}
@@ -266,7 +162,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NotificationProvider>
         <AuthProvider>
-          <TournamentAppContent />
+          <LeagueAppContent />
         </AuthProvider>
       </NotificationProvider>
     </QueryClientProvider>

@@ -133,7 +133,7 @@ export const AuthModal: React.FC = () => {
                   >
                     <div>{r === 'ADMIN' ? '★ ADMIN' : '👤 USER BIASA'}</div>
                     <div className={`text-[10px] font-medium lowercase mt-0.5 ${role === r ? 'text-black/80' : 'text-nb-muted'}`}>
-                      {r === 'ADMIN' ? 'buat turnamen & isi peserta' : 'lihat list & bracket'}
+                      {r === 'ADMIN' ? 'buat liga & kelola jadwal' : 'lihat list & klasemen'}
                     </div>
                   </button>
                 ))}

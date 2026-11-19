@@ -60,10 +60,11 @@ export const TelemetryDrawer: React.FC = () => {
                 const isSelected = selectedLog?.id === log.id;
 
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={log.id}
                     onClick={() => setSelectedLog(log)}
-                    className={`px-3.5 py-2 cursor-pointer font-mono text-xs flex items-center justify-between border-b-2 border-black/40 hover:bg-nb-cardHover transition-colors ${
+                    className={`w-full text-left px-3.5 py-2 cursor-pointer font-mono text-xs flex items-center justify-between border-b-2 border-black/40 hover:bg-nb-cardHover transition-colors ${
                       isSelected ? 'bg-nb-yellow text-black border-l-4 border-l-black font-black' : 'bg-nb-card text-nb-ink'
                     }`}
                   >
@@ -80,7 +81,7 @@ export const TelemetryDrawer: React.FC = () => {
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {log.durationMs !== undefined && (
                         <span className={`text-[10px] font-bold flex items-center gap-0.5 ${isSelected ? 'text-black/80' : 'text-nb-muted'}`}>
-                          <Clock className="w-3 h-3" /> {log.durationMs}ms
+                          <Clock className="w-3.5 h-3.5" /> {log.durationMs}ms
                         </span>
                       )}
                       <span
@@ -97,7 +98,7 @@ export const TelemetryDrawer: React.FC = () => {
                         {log.status}
                       </span>
                     </div>
-                  </div>
+                  </button>
                 );
               })
             )}

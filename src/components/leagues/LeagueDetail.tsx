@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { League, LeagueMatch } from '../../types/league';
 import { leagueService } from '../../services/leagueService';
 import { useAuth } from '../../context/AuthContext';
@@ -25,6 +25,30 @@ interface LeagueDetailProps {
   onRefreshParent?: () => void;
 }
 
+const LeagueStatusBadge: React.FC<{ status: League['status'] }> = ({ status }) => {
+  switch (status) {
+    case 'IN_PROGRESS':
+      return (
+        <span className="px-2.5 py-1 bg-nb-yellow text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
+          <Clock className="w-3.5 h-3.5" /> Sedang Berlangsung
+        </span>
+      );
+    case 'COMPLETED':
+      return (
+        <span className="px-2.5 py-1 bg-nb-cardAlt text-nb-ink border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
+          <CheckCircle2 className="w-3.5 h-3.5 text-nb-green" /> Selesai
+        </span>
+      );
+    case 'REGISTRATION_OPEN':
+    default:
+      return (
+        <span className="px-2.5 py-1 bg-nb-green text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
+          <Users className="w-3.5 h-3.5" /> Pendaftaran Terbuka
+        </span>
+      );
+  }
+};
+
 export const LeagueDetail: React.FC<LeagueDetailProps> = ({
   leagueId,
   onBack,
@@ -33,26 +57,39 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
   const { isAdmin, role } = useAuth();
   const { showToast } = useNotification();
 
-  const [league, setLeague] = useState<League | null>(null);
+  // Lazy initializer avoids calling setState synchronously in an effect on mount
+  const [prevLeagueId, setPrevLeagueId] = useState(leagueId);
+  const [league, setLeague] = useState<League | null>(() => {
+    try {
+      return leagueService.getLeagueById(leagueId);
+    } catch {
+      return null;
+    }
+  });
+
+  // If leagueId prop changes, update state directly during render
+  if (prevLeagueId !== leagueId) {
+    setPrevLeagueId(leagueId);
+    try {
+      setLeague(leagueService.getLeagueById(leagueId));
+    } catch {
+      setLeague(null);
+    }
+  }
+
   const [activeTab, setActiveTab] = useState<'standings' | 'fixtures' | 'teams'>('standings');
   const [selectedMatchForScore, setSelectedMatchForScore] = useState<LeagueMatch | null>(null);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
   const [isAddTeamModalOpen, setIsAddTeamModalOpen] = useState(false);
   const [isGeneratingSchedule, setIsGeneratingSchedule] = useState(false);
 
-  const loadLeagueData = useCallback(() => {
-    try {
-      const data = leagueService.getLeagueById(leagueId);
-      setLeague(data);
-    } catch (err: any) {
-      showToast('error', 'Gagal Memuat Liga', err.message || 'Liga tidak ditemukan');
+  // Notify and go back only if league fails to load
+  useEffect(() => {
+    if (!league) {
+      showToast('error', 'Gagal Memuat Liga', 'Liga tidak ditemukan');
       onBack();
     }
-  }, [leagueId, showToast, onBack]);
-
-  useEffect(() => {
-    loadLeagueData();
-  }, [loadLeagueData]);
+  }, [league, showToast, onBack]);
 
   if (!league) {
     return (
@@ -62,8 +99,15 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
     );
   }
 
+  // Data update logic moved to event handler
   const handleDataUpdated = () => {
-    loadLeagueData();
+    try {
+      const data = leagueService.getLeagueById(leagueId);
+      setLeague(data);
+    } catch (err: any) {
+      showToast('error', 'Gagal Memuat Liga', err.message || 'Liga tidak ditemukan');
+      onBack();
+    }
     onRefreshParent?.();
   };
 
@@ -94,30 +138,6 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
       showToast('error', 'Gagal Generate Jadwal', err.message || 'Terjadi kesalahan sistem.');
     } finally {
       setIsGeneratingSchedule(false);
-    }
-  };
-
-  const getStatusBadge = (status: League['status']) => {
-    switch (status) {
-      case 'IN_PROGRESS':
-        return (
-          <span className="px-2.5 py-1 bg-nb-yellow text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-            <Clock className="w-3.5 h-3.5" /> Sedang Berlangsung
-          </span>
-        );
-      case 'COMPLETED':
-        return (
-          <span className="px-2.5 py-1 bg-nb-cardAlt text-nb-ink border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-            <CheckCircle2 className="w-3.5 h-3.5 text-nb-green" /> Selesai
-          </span>
-        );
-      case 'REGISTRATION_OPEN':
-      default:
-        return (
-          <span className="px-2.5 py-1 bg-nb-green text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-            <Users className="w-3.5 h-3.5" /> Pendaftaran Terbuka
-          </span>
-        );
     }
   };
 
@@ -181,7 +201,7 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              {getStatusBadge(league.status)}
+              <LeagueStatusBadge status={league.status} />
               {league.game && (
                 <span className="px-2.5 py-1 bg-nb-cardAlt border-2 border-black font-mono font-bold text-xs uppercase flex items-center gap-1">
                   <Gamepad2 className="w-3.5 h-3.5 text-nb-yellow" /> {league.game}
@@ -328,17 +348,32 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
                   key={team.id}
                   className="bg-nb-card border-3 border-black p-4 shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg transition-all"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono font-black text-xs text-nb-muted uppercase">
-                      #{idx + 1}
-                    </span>
-                    {team.tag && (
-                      <span className="px-2 py-0.5 bg-nb-yellow text-black border-2 border-black font-mono font-black text-[10px]">
-                        [{team.tag}]
-                      </span>
+                  <div className="flex items-center gap-3">
+                    {team.logoUrl ? (
+                      <img
+                        src={team.logoUrl}
+                        alt={team.name}
+                        className="w-12 h-12 object-cover border-2 border-black shadow-brutal-sm bg-nb-card shrink-0"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-nb-cardAlt text-nb-ink border-2 border-black font-mono font-black text-sm flex items-center justify-center shadow-brutal-sm shrink-0">
+                        {team.tag || team.name.slice(0, 3).toUpperCase()}
+                      </div>
                     )}
+                    <div className="overflow-hidden flex-1">
+                      <div className="flex items-center justify-between gap-1 mb-0.5">
+                        <span className="font-mono font-black text-xs text-nb-muted uppercase">
+                          #{idx + 1}
+                        </span>
+                        {team.tag && (
+                          <span className="px-1.5 py-0.2 bg-nb-yellow text-black border border-black font-mono font-black text-[10px]">
+                            [{team.tag}]
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="font-mono font-black text-base text-nb-ink truncate">{team.name}</h4>
+                    </div>
                   </div>
-                  <h4 className="font-mono font-black text-base text-nb-ink truncate">{team.name}</h4>
                   <div className="mt-3 pt-3 border-t-2 border-black/10 space-y-1 font-mono text-xs">
                     {team.captainName && (
                       <div className="text-nb-muted flex items-center justify-between">

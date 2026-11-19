@@ -20,8 +20,8 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
   const { showToast } = useNotification();
 
   const [title, setTitle] = useState('');
-  const [season, setSeason] = useState('Season 1');
-  const [game, setGame] = useState('VALORANT Esports');
+  const [season, setSeason] = useState('');
+  const [game, setGame] = useState('');
   const [description, setDescription] = useState('');
   const [pointsWin, setPointsWin] = useState<number>(3);
   const [pointsDraw, setPointsDraw] = useState<number>(1);
@@ -59,7 +59,8 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
       showToast('success', 'Liga Berhasil Dibuat', `Liga "${newLeague.title}" siap didaftarkan tim.`);
       
       setTitle('');
-      setSeason('Season 1');
+      setSeason('');
+      setGame('');
       setDescription('');
       onSuccess(newLeague.id);
       onClose();
@@ -102,10 +103,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
           )}
 
           <div>
-            <label className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+            <label htmlFor="league-title" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
               Nama Liga <span className="text-nb-red">*</span>
             </label>
             <input
+              id="league-title"
               type="text"
               required
               placeholder="contoh: Indonesian Champions League 2026"
@@ -118,10 +120,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+              <label htmlFor="league-season" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
                 Musim / Edisi <span className="text-nb-red">*</span>
               </label>
               <input
+                id="league-season"
                 type="text"
                 required
                 placeholder="Season 1"
@@ -133,10 +136,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+              <label htmlFor="league-game" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
                 Cabang Game / Olahraga
               </label>
               <input
+                id="league-game"
                 type="text"
                 placeholder="contoh: VALORANT"
                 value={game}
@@ -148,10 +152,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+            <label htmlFor="league-description" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
               Deskripsi / Aturan Kompetisi
             </label>
             <textarea
+              id="league-description"
               rows={2}
               placeholder="Jelaskan ringkasan format, hadiah, atau jadwal tanding..."
               value={description}
@@ -168,10 +173,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
             </span>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
+                <label htmlFor="league-points-win" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
                   Poin Menang (W)
                 </label>
                 <input
+                  id="league-points-win"
                   type="number"
                   min={1}
                   max={10}
@@ -182,10 +188,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
+                <label htmlFor="league-points-draw" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
                   Poin Seri (D)
                 </label>
                 <input
+                  id="league-points-draw"
                   type="number"
                   min={0}
                   max={5}
@@ -196,10 +203,11 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
+                <label htmlFor="league-points-loss" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
                   Poin Kalah (L)
                 </label>
                 <input
+                  id="league-points-loss"
                   type="number"
                   min={0}
                   max={5}

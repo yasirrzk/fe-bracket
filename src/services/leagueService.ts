@@ -66,6 +66,7 @@ export function calculateStandings(league: League): LeagueStandingRow[] {
       teamId: team.id,
       teamName: team.name,
       tag: team.tag,
+      logoUrl: team.logoUrl,
       rank: 1,
       played,
       won,
@@ -155,132 +156,23 @@ export function generateRoundRobinMatches(leagueId: string, teams: LeagueTeam[])
   return matches;
 }
 
-function createInitialLeagues(): League[] {
-  const l1Id = 'league-premier-2026';
-  const teams: LeagueTeam[] = [
-    { id: 'lt-1', leagueId: l1Id, name: 'Paper Rex', tag: 'PRX', captainName: 'f0rsakeN', city: 'Singapore', createdAt: new Date().toISOString() },
-    { id: 'lt-2', leagueId: l1Id, name: 'Sentinels', tag: 'SEN', captainName: 'TenZ', city: 'Los Angeles', createdAt: new Date().toISOString() },
-    { id: 'lt-3', leagueId: l1Id, name: 'Fnatic', tag: 'FNC', captainName: 'Boaster', city: 'London', createdAt: new Date().toISOString() },
-    { id: 'lt-4', leagueId: l1Id, name: 'T1 Esports', tag: 'T1', captainName: 'Faker', city: 'Seoul', createdAt: new Date().toISOString() },
-    { id: 'lt-5', leagueId: l1Id, name: 'DRX Korea', tag: 'DRX', captainName: 'stax', city: 'Seoul', createdAt: new Date().toISOString() },
-    { id: 'lt-6', leagueId: l1Id, name: 'Team Secret', tag: 'TS', captainName: 'JessieVash', city: 'Manila', createdAt: new Date().toISOString() },
-  ];
-
-  const generatedMatches = generateRoundRobinMatches(l1Id, teams);
-
-  // Pre-fill Matchday 1 results
-  const m1Matches = generatedMatches.filter((m) => m.matchday === 1);
-  if (m1Matches[0]) {
-    m1Matches[0].homeScore = 2;
-    m1Matches[0].awayScore = 0;
-    m1Matches[0].status = 'COMPLETED';
-    m1Matches[0].playedAt = new Date(Date.now() - 3600000 * 48).toISOString();
-  }
-  if (m1Matches[1]) {
-    m1Matches[1].homeScore = 1;
-    m1Matches[1].awayScore = 1;
-    m1Matches[1].status = 'COMPLETED';
-    m1Matches[1].playedAt = new Date(Date.now() - 3600000 * 44).toISOString();
-  }
-  if (m1Matches[2]) {
-    m1Matches[2].homeScore = 0;
-    m1Matches[2].awayScore = 2;
-    m1Matches[2].status = 'COMPLETED';
-    m1Matches[2].playedAt = new Date(Date.now() - 3600000 * 40).toISOString();
-  }
-
-  // Pre-fill Matchday 2 results
-  const m2Matches = generatedMatches.filter((m) => m.matchday === 2);
-  if (m2Matches[0]) {
-    m2Matches[0].homeScore = 2;
-    m2Matches[0].awayScore = 1;
-    m2Matches[0].status = 'COMPLETED';
-    m2Matches[0].playedAt = new Date(Date.now() - 3600000 * 24).toISOString();
-  }
-  if (m2Matches[1]) {
-    m2Matches[1].homeScore = 2;
-    m2Matches[1].awayScore = 2;
-    m2Matches[1].status = 'COMPLETED';
-    m2Matches[1].playedAt = new Date(Date.now() - 3600000 * 20).toISOString();
-  }
-  if (m2Matches[2]) {
-    m2Matches[2].homeScore = 3;
-    m2Matches[2].awayScore = 0;
-    m2Matches[2].status = 'COMPLETED';
-    m2Matches[2].playedAt = new Date(Date.now() - 3600000 * 16).toISOString();
-  }
-
-  // Set Matchday 3 as READY for live testing
-  generatedMatches
-    .filter((m) => m.matchday === 3)
-    .forEach((m) => {
-      m.status = 'READY';
-    });
-
-  const league1: League = {
-    id: l1Id,
-    title: 'TURNAMEN ADIK ADIK',
-    season: 'Regular Season 1',
-    description: 'TOURNAMENT EFOOTBALL LIVE TIKTOK : DENNY DIUDARA.',
-    game: 'EFOOTBALL MOBILE',
-    status: 'IN_PROGRESS',
-    pointsWin: 3,
-    pointsDraw: 1,
-    pointsLoss: 0,
-    teamsCount: teams.length,
-    matchesCount: generatedMatches.length,
-    teams,
-    matches: generatedMatches,
-    createdAt: new Date(Date.now() - 3600000 * 24 * 7).toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  // League 2: Registration Open (for testing add team & generate schedule)
-  const l2Id = 'league-open-rookie-2026';
-  const rookieTeams: LeagueTeam[] = [
-    { id: 'rt-1', leagueId: l2Id, name: 'BOOM Esports', tag: 'BOM', captainName: 'blaZek1ng', createdAt: new Date().toISOString() },
-    { id: 'rt-2', leagueId: l2Id, name: 'Alter Ego', tag: 'AE', captainName: 'Kush', createdAt: new Date().toISOString() },
-    { id: 'rt-3', leagueId: l2Id, name: 'Rex Regum Qeon', tag: 'RRQ', captainName: 'fl1pzjder', createdAt: new Date().toISOString() },
-    { id: 'rt-4', leagueId: l2Id, name: 'Bigetron Arctic', tag: 'BTR', captainName: 'NcSlasher', createdAt: new Date().toISOString() },
-  ];
-
-  const league2: League = {
-    id: l2Id,
-    title: 'Rookie Division Championship',
-    season: 'Season 2026/A',
-    description: 'Liga divisi rookie terbuka untuk tim berkembang. Pendaftaran tim masih dibuka.',
-    game: 'Counter-Strike 2',
-    status: 'REGISTRATION_OPEN',
-    pointsWin: 3,
-    pointsDraw: 1,
-    pointsLoss: 0,
-    teamsCount: rookieTeams.length,
-    matchesCount: 0,
-    teams: rookieTeams,
-    matches: [],
-    createdAt: new Date(Date.now() - 3600000 * 24 * 3).toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  return [league1, league2];
-}
-
 class LeagueEngineService {
   private leagues: League[];
 
   constructor() {
     const saved = localStorage.getItem(LEAGUES_STORAGE_KEY);
+    const dummyIds = new Set(['league-premier-2026', 'league-open-rookie-2026']);
     if (saved) {
       try {
-        this.leagues = JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        this.leagues = Array.isArray(parsed) ? parsed.filter((l: League) => !dummyIds.has(l.id)) : [];
       } catch {
-        this.leagues = createInitialLeagues();
-        this.save();
+        this.leagues = [];
       }
     } else {
-      this.leagues = createInitialLeagues();
-      this.save();
+      this.leagues = [];
     }
+    this.save();
   }
 
   private save() {
@@ -288,13 +180,13 @@ class LeagueEngineService {
   }
 
   reset() {
-    this.leagues = createInitialLeagues();
+    this.leagues = [];
     this.save();
     telemetry.addLog({
       method: 'POST',
       url: '/leagues/reset [Simulated Engine]',
       status: 200,
-      responseData: { message: 'League database reset to default seed' },
+      responseData: { message: 'League database reset to empty' },
     });
   }
 
@@ -379,6 +271,7 @@ class LeagueEngineService {
       name: dto.name.trim(),
       tag: dto.tag?.trim().toUpperCase(),
       captainName: dto.captainName?.trim(),
+      logoUrl: dto.logoUrl,
       createdAt: new Date().toISOString(),
     };
 

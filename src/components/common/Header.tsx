@@ -1,47 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { api } from '../../services/api';
-import { Trophy, LogOut, LogIn, ChevronDown, RefreshCw, Shield, ShieldCheck, Palette, TableProperties } from 'lucide-react';
-import { UserRole } from '../../types/auth';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { api } from "../../services/api";
+import {
+  LogOut,
+  LogIn,
+  ChevronDown,
+  RefreshCw,
+  Shield,
+  ShieldCheck,
+  Palette,
+  Plus,
+} from "lucide-react";
+import { UserRole } from "../../types/auth";
+import logo from "../../../assets/logo1.png";
 
 interface HeaderProps {
-  activeView: 'tournaments' | 'leagues';
-  onViewChange: (view: 'tournaments' | 'leagues') => void;
   onOpenCreateModal: () => void;
   onHomeClick: () => void;
   onRefresh: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeView,
-  onViewChange,
   onOpenCreateModal,
   onHomeClick,
   onRefresh,
 }) => {
-  const { user, role, isAdmin, logout, switchRole, openAuthModal, simulateSessionRevocation } = useAuth();
+  const {
+    user,
+    role,
+    isAdmin,
+    logout,
+    switchRole,
+    openAuthModal,
+    simulateSessionRevocation,
+  } = useAuth();
   const [isMockMode, setIsMockMode] = useState(api.isMockMode());
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState<'vintage-parchment' | 'vintage-dark'>(() => {
-    return (localStorage.getItem('bracket_theme') as any) || 'vintage-parchment';
-  });
+  const [theme, setTheme] = useState<"vintage-parchment" | "vintage-dark">(
+    () => {
+      return (
+        (localStorage.getItem("bracket_theme") as any) || "vintage-parchment"
+      );
+    },
+  );
 
   useEffect(() => {
-    if (theme === 'vintage-dark') {
-      document.documentElement.setAttribute('data-theme', 'vintage-dark');
+    if (theme === "vintage-dark") {
+      document.documentElement.setAttribute("data-theme", "vintage-dark");
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.removeAttribute("data-theme");
     }
   }, [theme]);
 
   const toggleTheme = () => {
-    const next = theme === 'vintage-parchment' ? 'vintage-dark' : 'vintage-parchment';
+    const next =
+      theme === "vintage-parchment" ? "vintage-dark" : "vintage-parchment";
     setTheme(next);
-    localStorage.setItem('bracket_theme', next);
-    if (next === 'vintage-dark') {
-      document.documentElement.setAttribute('data-theme', 'vintage-dark');
+    localStorage.setItem("bracket_theme", next);
+    if (next === "vintage-dark") {
+      document.documentElement.setAttribute("data-theme", "vintage-dark");
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.removeAttribute("data-theme");
     }
   };
 
@@ -57,45 +76,23 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-4">
         {/* Left: Logo & View Switcher */}
         <div className="flex items-center gap-3 sm:gap-5">
-          <button onClick={onHomeClick} className="flex items-center gap-2.5 group text-left shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-nb-yellow border-3 border-black shadow-brutal-sm flex items-center justify-center group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-brutal transition-all">
-              <Trophy className="w-5 h-5 text-black" />
+          <button
+            onClick={onHomeClick}
+            className="flex items-center gap-2.5 group text-left shrink-0"
+          >
+            <div className="w-9 h-9 sm:w-10 sm:h-10 border-black shadow-brutal-sm flex items-center justify-center overflow-hidden group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-brutal transition-all">
+              <img
+                src={logo}
+                alt="Logo Liga Adik Adik"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="hidden sm:block">
               <span className="font-mono font-black text-base sm:text-lg text-nb-ink tracking-tight block leading-tight">
-                BRACKET<span className="bg-nb-yellow text-black px-1 mx-0.5 border-2 border-black">//</span>OPS
-              </span>
-              <span className="text-[9px] sm:text-[10px] font-mono font-bold text-nb-muted uppercase tracking-wider block">
-                Esport Tournament Engine
+                LIGA ADIK ADIK
               </span>
             </div>
           </button>
-
-          {/* Primary Navigation Switcher (Turnamen vs Liga) */}
-          <div className="flex items-center border-3 border-black bg-nb-bg p-0.5 shadow-brutal-sm font-mono text-xs">
-            <button
-              onClick={() => onViewChange('tournaments')}
-              className={`px-2.5 sm:px-3 py-1 font-black uppercase transition-all flex items-center gap-1.5 ${
-                activeView === 'tournaments'
-                  ? 'bg-nb-yellow text-black border-2 border-black shadow-brutal-sm'
-                  : 'text-nb-ink hover:bg-black/10'
-              }`}
-            >
-              <Trophy className="w-3.5 h-3.5 shrink-0" />
-              <span>Turnamen</span>
-            </button>
-            <button
-              onClick={() => onViewChange('leagues')}
-              className={`px-2.5 sm:px-3 py-1 font-black uppercase transition-all flex items-center gap-1.5 ${
-                activeView === 'leagues'
-                  ? 'bg-nb-yellow text-black border-2 border-black shadow-brutal-sm'
-                  : 'text-nb-ink hover:bg-black/10'
-              }`}
-            >
-              <TableProperties className="w-3.5 h-3.5 shrink-0" />
-              <span>Liga & Klasemen</span>
-            </button>
-          </div>
         </div>
 
         {/* Center/Right Controls */}
@@ -107,7 +104,11 @@ export const Header: React.FC<HeaderProps> = ({
             title="Ganti Tema Vintage (Kertas Tua vs Dark Sepia)"
           >
             <Palette className="w-3.5 h-3.5 text-nb-yellow" />
-            <span className="hidden lg:inline">{theme === 'vintage-parchment' ? '📜 Vintage Paper' : '📻 Vintage Dark'}</span>
+            <span className="hidden lg:inline">
+              {theme === "vintage-parchment"
+                ? "📜 Vintage Paper"
+                : "📻 Vintage Dark"}
+            </span>
           </button>
 
           {/* Engine Mode */}
@@ -116,8 +117,8 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={toggleMockMode}
               className={`px-2 py-1 font-mono text-[10px] font-black uppercase transition-all ${
                 isMockMode
-                  ? 'bg-nb-yellow text-black border-2 border-black shadow-brutal-sm'
-                  : 'text-nb-ink hover:bg-black/10'
+                  ? "bg-nb-yellow text-black border-2 border-black shadow-brutal-sm"
+                  : "text-nb-ink hover:bg-black/10"
               }`}
             >
               Simulator
@@ -126,8 +127,8 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={toggleMockMode}
               className={`px-2 py-1 font-mono text-[10px] font-black uppercase transition-all ${
                 !isMockMode
-                  ? 'bg-nb-green text-black border-2 border-black shadow-brutal-sm'
-                  : 'text-nb-ink hover:bg-black/10'
+                  ? "bg-nb-green text-black border-2 border-black shadow-brutal-sm"
+                  : "text-nb-ink hover:bg-black/10"
               }`}
             >
               Live API
@@ -146,9 +147,10 @@ export const Header: React.FC<HeaderProps> = ({
           {isAdmin && (
             <button
               onClick={onOpenCreateModal}
-              className="neo-btn hidden md:flex text-xs py-2 px-3"
+              className="neo-btn hidden md:flex text-xs py-2 px-3 items-center gap-1.5"
             >
-              {activeView === 'tournaments' ? '+ Buat Turnamen' : '+ Buat Liga'}
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Buat Liga Baru</span>
             </button>
           )}
 
@@ -179,12 +181,22 @@ export const Header: React.FC<HeaderProps> = ({
 
               {isDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)} />
+                  <button
+                    type="button"
+                    aria-label="Tutup menu dropdown"
+                    className="fixed inset-0 z-40 bg-transparent border-0 cursor-default"
+                    onClick={() => setIsDropdownOpen(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        setIsDropdownOpen(false);
+                      }
+                    }}
+                  />
                   <div className="absolute right-0 mt-2 w-56 bg-nb-card border-3 border-black shadow-brutal-lg z-50 font-mono text-xs animate-in fade-in zoom-in-95">
                     <div className="px-3 py-2 border-b-3 border-black bg-nb-cardAlt font-black text-[11px] uppercase tracking-wider text-nb-ink">
                       Ganti Role Akun
                     </div>
-                    {(['ADMIN', 'USER'] as UserRole[]).map((r) => (
+                    {(["ADMIN", "USER"] as UserRole[]).map((r) => (
                       <button
                         key={r}
                         onClick={() => {
@@ -192,11 +204,19 @@ export const Header: React.FC<HeaderProps> = ({
                           setIsDropdownOpen(false);
                         }}
                         className={`w-full text-left px-3 py-2.5 font-bold border-b-2 border-black last:border-b-0 flex items-center justify-between hover:bg-nb-yellow hover:text-black transition-colors ${
-                          role === r ? 'bg-nb-yellow text-black font-black' : 'text-nb-ink bg-nb-card'
+                          role === r
+                            ? "bg-nb-yellow text-black font-black"
+                            : "text-nb-ink bg-nb-card"
                         }`}
                       >
-                        <span>{r === 'ADMIN' ? '★ ADMIN (Full Access)' : '👤 USER (Lihat Saja)'}</span>
-                        {role === r && <span className="font-black text-xs">✓</span>}
+                        <span>
+                          {r === "ADMIN"
+                            ? "★ ADMIN (Full Access)"
+                            : "👤 USER (Lihat Saja)"}
+                        </span>
+                        {role === r && (
+                          <span className="font-black text-xs">✓</span>
+                        )}
                       </button>
                     ))}
                     <div className="border-t-3 border-black" />

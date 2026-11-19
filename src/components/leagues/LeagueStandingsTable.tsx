@@ -94,8 +94,12 @@ export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ leag
       {leader && leader.played > 0 && (
         <div className="bg-nb-yellow text-black border-3 border-black shadow-brutal-lg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-black text-nb-yellow border-3 border-black shadow-brutal-sm flex items-center justify-center flex-shrink-0">
-              <Crown className="w-8 h-8" />
+            <div className="w-14 h-14 bg-black text-nb-yellow border-3 border-black shadow-brutal-sm flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {leader.logoUrl ? (
+                <img src={leader.logoUrl} alt={leader.teamName} className="w-full h-full object-cover" />
+              ) : (
+                <Crown className="w-8 h-8" />
+              )}
             </div>
             <div>
               <span className="text-xs font-black uppercase tracking-wider block bg-black text-[#FAF6ED] px-2 py-0.5 w-fit mb-1 border border-black">
@@ -180,13 +184,21 @@ export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ leag
                     {/* Team Info */}
                     <td className="py-3 px-4 font-bold text-nb-ink">
                       <div className="flex items-center gap-2.5">
-                        <div
-                          className={`w-7 h-7 border-2 border-black font-black flex items-center justify-center text-[11px] shadow-brutal-sm ${
-                            isFirst ? 'bg-nb-yellow text-black' : 'bg-nb-cardAlt text-nb-ink'
-                          }`}
-                        >
-                          {row.tag || row.teamName.slice(0, 3).toUpperCase()}
-                        </div>
+                        {row.logoUrl ? (
+                          <img
+                            src={row.logoUrl}
+                            alt={row.teamName}
+                            className="w-7 h-7 object-cover border-2 border-black shadow-brutal-sm bg-nb-card shrink-0"
+                          />
+                        ) : (
+                          <div
+                            className={`w-7 h-7 border-2 border-black font-black flex items-center justify-center text-[11px] shadow-brutal-sm shrink-0 ${
+                              isFirst ? 'bg-nb-yellow text-black' : 'bg-nb-cardAlt text-nb-ink'
+                            }`}
+                          >
+                            {row.tag || row.teamName.slice(0, 3).toUpperCase()}
+                          </div>
+                        )}
                         <div className="truncate">
                           <span className="text-sm font-black text-nb-ink block leading-tight">
                             {row.teamName}

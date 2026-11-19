@@ -140,9 +140,17 @@ export const LeagueFixtures: React.FC<LeagueFixturesProps> = ({ league, onSelect
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate pr-2">
-                    <span className="w-6 h-6 bg-black text-[#FAF6ED] text-[10px] font-black border border-black flex items-center justify-center flex-shrink-0">
-                      {match.homeTeam?.tag || 'HOM'}
-                    </span>
+                    {match.homeTeam?.logoUrl ? (
+                      <img
+                        src={match.homeTeam.logoUrl}
+                        alt={match.homeTeam.name}
+                        className="w-6 h-6 object-cover border border-black flex-shrink-0 bg-nb-card"
+                      />
+                    ) : (
+                      <span className="w-6 h-6 bg-black text-[#FAF6ED] text-[10px] font-black border border-black flex items-center justify-center flex-shrink-0">
+                        {match.homeTeam?.tag || 'HOM'}
+                      </span>
+                    )}
                     <span className="text-xs truncate font-bold">{match.homeTeam?.name}</span>
                   </div>
                   <span
@@ -165,9 +173,17 @@ export const LeagueFixtures: React.FC<LeagueFixturesProps> = ({ league, onSelect
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate pr-2">
-                    <span className="w-6 h-6 bg-black text-[#FAF6ED] text-[10px] font-black border border-black flex items-center justify-center flex-shrink-0">
-                      {match.awayTeam?.tag || 'AWY'}
-                    </span>
+                    {match.awayTeam?.logoUrl ? (
+                      <img
+                        src={match.awayTeam.logoUrl}
+                        alt={match.awayTeam.name}
+                        className="w-6 h-6 object-cover border border-black flex-shrink-0 bg-nb-card"
+                      />
+                    ) : (
+                      <span className="w-6 h-6 bg-black text-[#FAF6ED] text-[10px] font-black border border-black flex items-center justify-center flex-shrink-0">
+                        {match.awayTeam?.tag || 'AWY'}
+                      </span>
+                    )}
                     <span className="text-xs truncate font-bold">{match.awayTeam?.name}</span>
                   </div>
                   <span

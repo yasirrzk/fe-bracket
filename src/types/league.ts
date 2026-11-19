@@ -7,6 +7,7 @@ export interface LeagueTeam {
   tag?: string;
   captainName?: string;
   city?: string;
+  logoUrl?: string;
   createdAt: string;
 }
 
@@ -28,6 +29,7 @@ export interface LeagueStandingRow {
   teamId: string;
   teamName: string;
   tag?: string;
+  logoUrl?: string;
   rank: number;
   played: number;
   won: number;
@@ -72,6 +74,7 @@ export interface AddLeagueTeamDto {
   name: string;
   tag?: string;
   captainName?: string;
+  logoUrl?: string;
 }
 
 export interface SubmitLeagueScoreDto {
