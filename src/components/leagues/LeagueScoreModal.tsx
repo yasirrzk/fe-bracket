@@ -3,7 +3,7 @@ import { LeagueMatch } from '../../types/league';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { leagueService } from '../../services/leagueService';
-import { X, Swords, ShieldAlert, Scale } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface LeagueScoreModalProps {
   match: LeagueMatch | null;
@@ -26,15 +26,15 @@ const ScoreInput: React.FC<ScoreInputProps> = ({
   onChange,
 }) => (
   <div className="flex flex-col items-center gap-2">
-    <span className="font-mono text-xs font-black uppercase text-black bg-nb-yellow px-2 py-0.5 border border-black shadow-brutal-sm">
+    <span className="font-mono text-[10px] font-semibold uppercase text-zinc-600 bg-zinc-200/80 px-1.5 py-0.5 border border-zinc-300">
       {label}
     </span>
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <button
         type="button"
         disabled={disabled}
         onClick={() => onChange(Math.max(0, value - 1))}
-        className="w-10 h-10 bg-nb-card border-3 border-black font-mono font-black text-xl text-nb-ink hover:bg-nb-yellow hover:text-black active:translate-y-0.5 transition-all shadow-brutal-sm disabled:opacity-40"
+        className="w-8 h-8 bg-white border border-zinc-300 font-mono font-bold text-base text-zinc-900 hover:bg-zinc-100 transition-colors disabled:opacity-40"
       >
         -
       </button>
@@ -44,13 +44,13 @@ const ScoreInput: React.FC<ScoreInputProps> = ({
         disabled={disabled}
         value={value}
         onChange={(e) => onChange(Math.max(0, parseInt(e.target.value, 10) || 0))}
-        className="w-16 h-10 text-center font-mono font-black text-2xl bg-nb-cardAlt border-3 border-black text-nb-ink focus:outline-none focus:bg-nb-cardHover shadow-brutal-sm disabled:opacity-50"
+        className="w-14 h-8 text-center font-mono font-bold text-lg tabular-nums bg-white border border-zinc-300 text-zinc-950 focus:outline-hidden focus:border-zinc-950 disabled:opacity-50"
       />
       <button
         type="button"
         disabled={disabled}
         onClick={() => onChange(value + 1)}
-        className="w-10 h-10 bg-nb-card border-3 border-black font-mono font-black text-xl text-nb-ink hover:bg-nb-yellow hover:text-black active:translate-y-0.5 transition-all shadow-brutal-sm disabled:opacity-40"
+        className="w-8 h-8 bg-white border border-zinc-300 font-mono font-bold text-base text-zinc-900 hover:bg-zinc-100 transition-colors disabled:opacity-40"
       >
         +
       </button>
@@ -134,75 +134,69 @@ export const LeagueScoreModal: React.FC<LeagueScoreModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 font-sans">
-      <div className="bg-nb-card text-nb-ink border-3 border-black shadow-brutal-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 font-sans backdrop-blur-[1px]">
+      <div className="bg-white text-zinc-950 border-2 border-zinc-900 w-full max-w-md p-5 sm:p-6 relative">
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 p-1 hover:bg-black hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-1 text-zinc-400 hover:text-zinc-950 hover:bg-zinc-100 transition-colors"
           aria-label="Tutup"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2.5 bg-nb-yellow text-black border-3 border-black shadow-brutal-sm">
-            <Swords className="w-6 h-6" />
+        <div className="mb-5">
+          <div className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            PEKAN {match.matchday} · SISTEM LIGA
           </div>
-          <div>
-            <div className="font-mono text-xs font-black uppercase tracking-wider text-nb-muted">
-              PEKAN {match.matchday} • SISTEM LIGA
-            </div>
-            <h2 className="text-xl font-black uppercase tracking-tight text-nb-ink">
-              Input Skor Pertandingan
-            </h2>
-          </div>
+          <h2 className="text-lg font-bold uppercase tracking-tight text-zinc-950 mt-0.5">
+            Input Skor Pertandingan
+          </h2>
         </div>
 
         {!isAdmin && (
-          <div className="mb-4 p-3 bg-nb-red text-white border-3 border-black font-mono text-xs font-black flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 flex-shrink-0" />
-            <span>403 Guard: Anda login sebagai USER. Form ini dikunci khusus untuk ADMIN.</span>
+          <div className="mb-4 p-2.5 bg-red-50 border border-red-200 text-red-900 font-mono text-xs">
+            403 Guard: Anda login sebagai USER. Form ini dikunci khusus untuk ADMIN.
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Scoreboard Cards */}
-          <div className="grid grid-cols-2 gap-4 bg-nb-cardAlt p-5 border-3 border-black shadow-brutal-sm">
-            <div className="text-center">
+          <div className="grid grid-cols-2 divide-x divide-zinc-300 bg-zinc-50 border-[1.5px] border-zinc-400 p-4">
+            <div className="text-center pr-2">
               {match.homeTeam?.logoUrl ? (
                 <img
                   src={match.homeTeam.logoUrl}
                   alt={homeName}
-                  className="w-12 h-12 object-cover mx-auto mb-2 border-2 border-black shadow-brutal-sm bg-nb-card"
+                  className="w-12 h-12 object-cover mx-auto mb-2 border border-zinc-300 bg-white"
                 />
               ) : (
-                <div className="w-12 h-12 mx-auto mb-2 bg-black text-[#FAF6ED] font-mono font-black text-sm border-2 border-black flex items-center justify-center shadow-brutal-sm">
+                <div className="w-12 h-12 mx-auto mb-2 bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
                   {match.homeTeam?.tag || 'HOM'}
                 </div>
               )}
-              <div className="font-mono text-sm font-black truncate mb-3 text-nb-ink" title={homeName}>
+              <div className="font-mono text-sm font-bold truncate mb-3 text-zinc-950" title={homeName}>
                 {homeName}
               </div>
               <ScoreInput
-                label="Klub Tuan Rumah"
+                label="Tuan Rumah"
                 value={homeScore}
                 disabled={!isAdmin}
                 onChange={handleHomeScoreChange}
               />
             </div>
-            <div className="text-center border-l-3 border-black pl-4">
+            <div className="text-center pl-2">
               {match.awayTeam?.logoUrl ? (
                 <img
                   src={match.awayTeam.logoUrl}
                   alt={awayName}
-                  className="w-12 h-12 object-cover mx-auto mb-2 border-2 border-black shadow-brutal-sm bg-nb-card"
+                  className="w-12 h-12 object-cover mx-auto mb-2 border border-zinc-300 bg-white"
                 />
               ) : (
-                <div className="w-12 h-12 mx-auto mb-2 bg-black text-[#FAF6ED] font-mono font-black text-sm border-2 border-black flex items-center justify-center shadow-brutal-sm">
+                <div className="w-12 h-12 mx-auto mb-2 bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
                   {match.awayTeam?.tag || 'AWY'}
                 </div>
               )}
-              <div className="font-mono text-sm font-black truncate mb-3 text-nb-ink" title={awayName}>
+              <div className="font-mono text-sm font-bold truncate mb-3 text-zinc-950" title={awayName}>
                 {awayName}
               </div>
               <ScoreInput
@@ -215,40 +209,40 @@ export const LeagueScoreModal: React.FC<LeagueScoreModalProps> = ({
           </div>
 
           {/* Points Impact Live Preview */}
-          <div className="p-3 bg-nb-card border-2 border-black font-mono text-xs shadow-brutal-sm">
-            <div className="text-[10px] uppercase font-black text-nb-muted mb-1.5 flex items-center gap-1">
-              <Scale className="w-3.5 h-3.5 text-nb-yellow" /> Simulasi Tambahan Poin Klasemen:
+          <div className="p-3 bg-zinc-50 border border-zinc-300 font-mono text-xs">
+            <div className="text-[11px] uppercase font-semibold text-zinc-500 mb-1.5">
+              Simulasi Tambahan Poin Klasemen:
             </div>
             {isDraw ? (
-              <div className="flex items-center justify-between font-black text-nb-ink bg-nb-cardAlt p-2 border border-black">
-                <span>Hasil Seri (Imbang)</span>
-                <span className="text-nb-yellow">+1 Poin untuk Kedua Tim</span>
+              <div className="flex items-center justify-between text-xs bg-white p-2 border border-zinc-300">
+                <span className="text-zinc-600 font-medium">Hasil Seri (Imbang)</span>
+                <span className="font-semibold text-zinc-900">+1 Poin untuk Kedua Tim</span>
               </div>
             ) : homeWins ? (
-              <div className="flex items-center justify-between font-black text-nb-ink bg-nb-cardAlt p-2 border border-black">
-                <span>{homeName} Menang</span>
-                <span className="text-nb-green">+3 Poin ({awayName} +0)</span>
+              <div className="flex items-center justify-between text-xs bg-white p-2 border border-zinc-300">
+                <span className="text-zinc-600 font-medium">{homeName} Menang</span>
+                <span className="font-semibold text-emerald-700">+3 Poin ({awayName} +0)</span>
               </div>
             ) : (
-              <div className="flex items-center justify-between font-black text-nb-ink bg-nb-cardAlt p-2 border border-black">
-                <span>{awayName} Menang</span>
-                <span className="text-nb-green">+3 Poin ({homeName} +0)</span>
+              <div className="flex items-center justify-between text-xs bg-white p-2 border border-zinc-300">
+                <span className="text-zinc-600 font-medium">{awayName} Menang</span>
+                <span className="font-semibold text-emerald-700">+3 Poin ({homeName} +0)</span>
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-2 border-t-3 border-black">
+          <div className="flex justify-end gap-2 pt-3 border-t border-zinc-300">
             <button
               type="button"
               onClick={handleClose}
-              className="neo-btn-secondary px-4 py-2 text-xs"
+              className="px-3 py-1.5 border border-zinc-300 text-xs font-mono font-medium text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 transition-colors"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !isAdmin}
-              className="neo-btn px-6 py-2 text-xs"
+              className="px-4 py-1.5 bg-zinc-950 text-white text-xs font-mono font-semibold uppercase tracking-wider hover:bg-zinc-800 transition-colors disabled:opacity-50 border border-zinc-950"
             >
               {isSubmitting ? 'MENYIMPAN...' : 'SIMPAN SKOR LIGA'}
             </button>

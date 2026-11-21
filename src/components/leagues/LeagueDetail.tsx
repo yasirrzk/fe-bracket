@@ -7,17 +7,7 @@ import { LeagueStandingsTable } from './LeagueStandingsTable';
 import { LeagueFixtures } from './LeagueFixtures';
 import { LeagueScoreModal } from './LeagueScoreModal';
 import { AddLeagueTeamModal } from './AddLeagueTeamModal';
-import {
-  ArrowLeft,
-  TableProperties,
-  Users,
-  Plus,
-  Play,
-  Gamepad2,
-  CheckCircle2,
-  Clock,
-  Swords,
-} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface LeagueDetailProps {
   leagueId: string;
@@ -29,21 +19,21 @@ const LeagueStatusBadge: React.FC<{ status: League['status'] }> = ({ status }) =
   switch (status) {
     case 'IN_PROGRESS':
       return (
-        <span className="px-2.5 py-1 bg-nb-yellow text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-          <Clock className="w-3.5 h-3.5" /> Sedang Berlangsung
+        <span className="px-2 py-0.5 bg-zinc-950 text-white font-mono font-bold text-[10px] uppercase">
+          SEDANG BERLANGSUNG
         </span>
       );
     case 'COMPLETED':
       return (
-        <span className="px-2.5 py-1 bg-nb-cardAlt text-nb-ink border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-          <CheckCircle2 className="w-3.5 h-3.5 text-nb-green" /> Selesai
+        <span className="px-2 py-0.5 bg-zinc-100 text-zinc-600 border border-zinc-200 font-mono font-semibold text-[10px] uppercase">
+          SELESAI
         </span>
       );
     case 'REGISTRATION_OPEN':
     default:
       return (
-        <span className="px-2.5 py-1 bg-nb-green text-black border-2 border-black font-mono font-black text-xs uppercase flex items-center gap-1 shadow-brutal-sm">
-          <Users className="w-3.5 h-3.5" /> Pendaftaran Terbuka
+        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 font-mono font-bold text-[10px] uppercase">
+          PENDAFTARAN TERBUKA
         </span>
       );
   }
@@ -57,7 +47,6 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
   const { isAdmin, role } = useAuth();
   const { showToast } = useNotification();
 
-  // Lazy initializer avoids calling setState synchronously in an effect on mount
   const [prevLeagueId, setPrevLeagueId] = useState(leagueId);
   const [league, setLeague] = useState<League | null>(() => {
     try {
@@ -67,7 +56,6 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
     }
   });
 
-  // If leagueId prop changes, update state directly during render
   if (prevLeagueId !== leagueId) {
     setPrevLeagueId(leagueId);
     try {
@@ -83,7 +71,6 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
   const [isAddTeamModalOpen, setIsAddTeamModalOpen] = useState(false);
   const [isGeneratingSchedule, setIsGeneratingSchedule] = useState(false);
 
-  // Notify and go back only if league fails to load
   useEffect(() => {
     if (!league) {
       showToast('error', 'Gagal Memuat Liga', 'Liga tidak ditemukan');
@@ -93,13 +80,12 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
 
   if (!league) {
     return (
-      <div className="flex items-center justify-center p-16 font-mono text-sm">
+      <div className="flex items-center justify-center p-16 font-mono text-xs text-zinc-500">
         Memuat data kompetisi liga...
       </div>
     );
   }
 
-  // Data update logic moved to event handler
   const handleDataUpdated = () => {
     try {
       const data = leagueService.getLeagueById(leagueId);
@@ -141,8 +127,10 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
     }
   };
 
+  const completedCount = league.matches.filter((m) => m.status === 'COMPLETED').length;
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-5 font-sans animate-in fade-in duration-100">
       {/* Modals */}
       <LeagueScoreModal
         match={selectedMatchForScore}
@@ -162,34 +150,35 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
       />
 
       {/* Top Bar Navigation & Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <button
+          type="button"
           onClick={onBack}
-          className="px-3 py-1.5 bg-nb-cardAlt border-3 border-black text-xs font-mono font-black uppercase text-nb-ink shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal hover:bg-nb-yellow hover:text-black transition-all flex items-center gap-2"
+          className="px-3 py-1.5 border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-950 text-xs font-mono font-semibold transition-colors flex items-center gap-1.5"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Kembali ke Daftar Liga</span>
+          <ArrowLeft className="w-3.5 h-3.5 stroke-[1.75]" />
+          <span>Kembali</span>
         </button>
 
         <div className="flex items-center gap-2">
           {isAdmin && (
             <>
               <button
+                type="button"
                 onClick={() => setIsAddTeamModalOpen(true)}
-                className="px-3.5 py-1.5 bg-nb-cardAlt border-3 border-black text-xs font-mono font-black uppercase text-nb-ink shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal hover:bg-nb-yellow hover:text-black transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-950 text-xs font-mono font-semibold transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>+ Tambah Tim</span>
+                + Tambah Tim
               </button>
 
               <button
+                type="button"
                 onClick={handleGenerateSchedule}
                 disabled={isGeneratingSchedule || league.teams.length < 2}
-                className="px-3.5 py-1.5 bg-nb-yellow border-3 border-black text-xs font-mono font-black uppercase text-black shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-zinc-950 text-white hover:bg-zinc-800 border border-zinc-950 text-xs font-mono font-semibold transition-colors disabled:opacity-50"
                 title={league.teams.length < 2 ? 'Dibutuhkan minimal 2 tim' : 'Buat jadwal pertandingan round-robin'}
               >
-                <Play className="w-3.5 h-3.5 fill-black" />
-                <span>{league.matches.length > 0 ? 'Generate Ulang Jadwal' : 'Generate Jadwal'}</span>
+                {league.matches.length > 0 ? 'Generate Ulang Jadwal' : 'Generate Jadwal'}
               </button>
             </>
           )}
@@ -197,96 +186,96 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
       </div>
 
       {/* Hero Banner Liga */}
-      <div className="bg-nb-card border-3 border-black shadow-brutal p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-white border-[1.5px] border-zinc-400 p-5 sm:p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <LeagueStatusBadge status={league.status} />
               {league.game && (
-                <span className="px-2.5 py-1 bg-nb-cardAlt border-2 border-black font-mono font-bold text-xs uppercase flex items-center gap-1">
-                  <Gamepad2 className="w-3.5 h-3.5 text-nb-yellow" /> {league.game}
+                <span className="px-1.5 py-0.2 bg-zinc-100 text-zinc-700 font-mono text-[10px] uppercase border border-zinc-300">
+                  {league.game}
                 </span>
               )}
-              <span className="px-2.5 py-1 bg-nb-cardAlt border-2 border-black font-mono font-bold text-xs uppercase">
+              <span className="px-1.5 py-0.2 bg-zinc-100 text-zinc-500 font-mono text-[10px] uppercase border border-zinc-300">
                 {league.season}
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-mono font-black text-nb-ink tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-950 tracking-tight">
               {league.title}
             </h1>
 
             {league.description && (
-              <p className="text-xs sm:text-sm text-nb-muted font-sans font-medium max-w-2xl">
+              <p className="text-xs sm:text-sm text-zinc-500 font-normal max-w-2xl">
                 {league.description}
               </p>
             )}
           </div>
 
           {/* Quick Metrics */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="bg-nb-cardAlt border-3 border-black p-3 text-center min-w-[90px] shadow-brutal-sm">
-              <span className="block font-mono text-2xl font-black text-nb-ink">{league.teams.length}</span>
-              <span className="text-[10px] font-mono font-bold uppercase text-nb-muted">Total Tim</span>
+          <div className="divide-x divide-zinc-300 border border-zinc-300 bg-zinc-50 inline-flex font-mono text-xs tabular-nums self-start md:self-auto shrink-0">
+            <div className="px-3.5 py-2 text-center">
+              <span className="block text-sm sm:text-base font-bold text-zinc-950">{league.teams.length}</span>
+              <span className="text-[10px] uppercase text-zinc-500 font-semibold">Tim</span>
             </div>
-            <div className="bg-nb-cardAlt border-3 border-black p-3 text-center min-w-[90px] shadow-brutal-sm">
-              <span className="block font-mono text-2xl font-black text-nb-ink">
-                {league.matches.filter((m) => m.status === 'COMPLETED').length}/{league.matches.length}
+            <div className="px-3.5 py-2 text-center">
+              <span className="block text-sm sm:text-base font-bold text-zinc-950">
+                {completedCount}/{league.matches.length}
               </span>
-              <span className="text-[10px] font-mono font-bold uppercase text-nb-muted">Laga Selesai</span>
+              <span className="text-[10px] uppercase text-zinc-500 font-semibold">Laga</span>
             </div>
-            <div className="bg-nb-cardAlt border-3 border-black p-3 text-center min-w-[90px] shadow-brutal-sm">
-              <span className="block font-mono text-2xl font-black text-nb-yellow">
+            <div className="px-3.5 py-2 text-center">
+              <span className="block text-sm sm:text-base font-bold text-zinc-950">
                 {league.pointsWin}/{league.pointsDraw}/{league.pointsLoss}
               </span>
-              <span className="text-[10px] font-mono font-bold uppercase text-nb-muted">Poin W/D/L</span>
+              <span className="text-[10px] uppercase text-zinc-500 font-semibold">W/D/L</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex items-center border-b-3 border-black gap-2 font-mono text-xs overflow-x-auto">
+      {/* Tabs Navigation (Swiss Grid Flat Underline) */}
+      <div className="flex items-center border-b-2 border-zinc-300 gap-6 font-mono text-xs overflow-x-auto">
         <button
+          type="button"
           onClick={() => setActiveTab('standings')}
-          className={`px-4 py-2.5 font-black uppercase flex items-center gap-2 border-t-3 border-x-3 border-black transition-all ${
+          className={`pb-2.5 uppercase font-semibold tracking-wider transition-colors -mb-[2px] ${
             activeTab === 'standings'
-              ? 'bg-nb-card text-nb-ink -mb-[3px] border-b-3 border-b-nb-card shadow-brutal-sm'
-              : 'bg-nb-cardAlt text-nb-muted hover:text-nb-ink hover:bg-nb-card'
+              ? 'border-b-2 border-zinc-950 text-zinc-950 font-bold'
+              : 'text-zinc-500 hover:text-zinc-950 border-b-2 border-transparent'
           }`}
         >
-          <TableProperties className="w-4 h-4 text-nb-yellow" />
-          <span>Tabel Klasemen</span>
+          Klasemen
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('fixtures')}
-          className={`px-4 py-2.5 font-black uppercase flex items-center gap-2 border-t-3 border-x-3 border-black transition-all ${
+          className={`pb-2.5 uppercase font-semibold tracking-wider transition-colors -mb-[2px] flex items-center gap-1.5 ${
             activeTab === 'fixtures'
-              ? 'bg-nb-card text-nb-ink -mb-[3px] border-b-3 border-b-nb-card shadow-brutal-sm'
-              : 'bg-nb-cardAlt text-nb-muted hover:text-nb-ink hover:bg-nb-card'
+              ? 'border-b-2 border-zinc-950 text-zinc-950 font-bold'
+              : 'text-zinc-500 hover:text-zinc-950 border-b-2 border-transparent'
           }`}
         >
-          <Swords className="w-4 h-4 text-nb-red" />
-          <span>Jadwal & Hasil Pekan</span>
+          <span>Jadwal & Hasil</span>
           {league.matches.length > 0 && (
-            <span className="px-1.5 py-0.2 bg-black text-white text-[10px] font-mono">
+            <span className="px-1.5 py-0.2 bg-zinc-100 text-zinc-600 text-[10px] tabular-nums border border-zinc-300">
               {league.matches.length}
             </span>
           )}
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('teams')}
-          className={`px-4 py-2.5 font-black uppercase flex items-center gap-2 border-t-3 border-x-3 border-black transition-all ${
+          className={`pb-2.5 uppercase font-semibold tracking-wider transition-colors -mb-[2px] flex items-center gap-1.5 ${
             activeTab === 'teams'
-              ? 'bg-nb-card text-nb-ink -mb-[3px] border-b-3 border-b-nb-card shadow-brutal-sm'
-              : 'bg-nb-cardAlt text-nb-muted hover:text-nb-ink hover:bg-nb-card'
+              ? 'border-b-2 border-zinc-950 text-zinc-950 font-bold'
+              : 'text-zinc-500 hover:text-zinc-950 border-b-2 border-transparent'
           }`}
         >
-          <Users className="w-4 h-4 text-nb-green" />
           <span>Roster Tim</span>
-          <span className="px-1.5 py-0.2 bg-black text-white text-[10px] font-mono">
+          <span className="px-1.5 py-0.2 bg-zinc-100 text-zinc-600 text-[10px] tabular-nums border border-zinc-300">
             {league.teams.length}
           </span>
         </button>
@@ -294,13 +283,13 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
 
       {/* Tab Contents */}
       {activeTab === 'standings' && (
-        <div className="space-y-4">
+        <div>
           <LeagueStandingsTable league={league} />
         </div>
       )}
 
       {activeTab === 'fixtures' && (
-        <div className="space-y-4">
+        <div>
           <LeagueFixtures
             league={league}
             onSelectMatch={(match) => {
@@ -315,79 +304,80 @@ export const LeagueDetail: React.FC<LeagueDetailProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-mono font-black uppercase text-base text-nb-ink">
+              <h3 className="font-mono font-bold uppercase text-xs text-zinc-950">
                 Peserta Liga ({league.teams.length} Tim)
               </h3>
-              <p className="text-xs text-nb-muted font-sans font-medium">
-                Daftar tim yang bertanding.
+              <p className="text-xs text-zinc-500 font-normal">
+                Daftar tim terdaftar dalam kompetisi.
               </p>
             </div>
             {isAdmin && (
               <button
+                type="button"
                 onClick={() => setIsAddTeamModalOpen(true)}
-                className="px-3.5 py-1.5 bg-nb-yellow border-3 border-black text-xs font-mono font-black uppercase text-black shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-zinc-950 text-white hover:bg-zinc-800 border border-zinc-950 text-xs font-mono font-semibold uppercase tracking-wider transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Tambah Tim Baru</span>
+                + Tambah Tim
               </button>
             )}
           </div>
 
           {league.teams.length === 0 ? (
-            <div className="bg-nb-card border-3 border-black shadow-brutal p-12 text-center max-w-md mx-auto">
-              <Users className="w-12 h-12 mx-auto mb-3 text-nb-yellow" />
-              <h4 className="font-mono font-black uppercase text-sm text-nb-ink">Belum Ada Tim Terdaftar</h4>
-              <p className="text-xs text-nb-muted mt-1 font-sans">
+            <div className="bg-white border-[1.5px] border-zinc-400 p-8 text-center max-w-md mx-auto font-mono">
+              <div className="font-bold uppercase text-xs sm:text-sm text-zinc-950">Belum Ada Tim Terdaftar</div>
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-sans">
                 Daftarkan minimal 2 tim untuk mulai membuat jadwal pertandingan.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {league.teams.map((team, idx) => (
                 <div
                   key={team.id}
-                  className="bg-nb-card border-3 border-black p-4 shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg transition-all"
+                  className="bg-white border-[1.5px] border-zinc-400 p-3.5 hover:border-zinc-600 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     {team.logoUrl ? (
                       <img
                         src={team.logoUrl}
                         alt={team.name}
-                        className="w-12 h-12 object-cover border-2 border-black shadow-brutal-sm bg-nb-card shrink-0"
+                        className="w-8 h-8 object-cover border border-zinc-300 shrink-0 bg-zinc-50"
                       />
                     ) : (
-                      <div className="w-12 h-12 bg-nb-cardAlt text-nb-ink border-2 border-black font-mono font-black text-sm flex items-center justify-center shadow-brutal-sm shrink-0">
+                      <div className="w-8 h-8 bg-zinc-100 text-zinc-950 border border-zinc-300 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                         {team.tag || team.name.slice(0, 3).toUpperCase()}
                       </div>
                     )}
-                    <div className="overflow-hidden flex-1">
+                    <div className="overflow-hidden flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className="font-mono font-black text-xs text-nb-muted uppercase">
+                        <span className="font-mono font-semibold text-[10px] text-zinc-400 tabular-nums">
                           #{idx + 1}
                         </span>
                         {team.tag && (
-                          <span className="px-1.5 py-0.2 bg-nb-yellow text-black border border-black font-mono font-black text-[10px]">
-                            [{team.tag}]
+                          <span className="px-1.5 py-0.2 bg-zinc-100 text-zinc-700 border border-zinc-300 font-mono font-bold text-[10px]">
+                            {team.tag}
                           </span>
                         )}
                       </div>
-                      <h4 className="font-mono font-black text-base text-nb-ink truncate">{team.name}</h4>
+                      <h4 className="font-sans font-bold text-sm sm:text-base text-zinc-950 truncate">{team.name}</h4>
                     </div>
                   </div>
-                  <div className="mt-3 pt-3 border-t-2 border-black/10 space-y-1 font-mono text-xs">
-                    {team.captainName && (
-                      <div className="text-nb-muted flex items-center justify-between">
-                        <span>Kapten:</span>
-                        <span className="font-bold text-nb-ink">{team.captainName}</span>
-                      </div>
-                    )}
-                    {team.city && (
-                      <div className="text-nb-muted flex items-center justify-between">
-                        <span>Asal:</span>
-                        <span className="font-bold text-nb-ink">{team.city}</span>
-                      </div>
-                    )}
-                  </div>
+                  {(team.captainName || team.city) && (
+                    <div className="mt-2.5 pt-2 border-t border-zinc-200 space-y-0.5 font-mono text-[11px] text-zinc-500">
+                      {team.captainName && (
+                        <div className="flex items-center justify-between">
+                          <span>Kapten:</span>
+                          <span className="font-semibold text-zinc-950">{team.captainName}</span>
+                        </div>
+                      )}
+                      {team.city && (
+                        <div className="flex items-center justify-between">
+                          <span>Asal:</span>
+                          <span className="font-semibold text-zinc-950">{team.city}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

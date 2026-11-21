@@ -1,43 +1,70 @@
 import React from 'react';
 import { useNotification } from '../../context/NotificationContext';
-import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useNotification();
 
   if (toasts.length === 0) return null;
 
-  const styles: Record<string, { bg: string; icon: React.ReactNode }> = {
-    success: { bg: 'bg-nb-green', icon: <CheckCircle className="w-5 h-5 text-black" /> },
-    error: { bg: 'bg-nb-red', icon: <AlertCircle className="w-5 h-5 text-white" /> },
-    warning: { bg: 'bg-nb-yellow', icon: <AlertTriangle className="w-5 h-5 text-black" /> },
-    info: { bg: 'bg-nb-cardAlt', icon: <Info className="w-5 h-5 text-nb-ink" /> },
+  const getBorderColor = (type: string) => {
+    switch (type) {
+      case 'success':
+        return 'border-l-emerald-500';
+      case 'error':
+        return 'border-l-rose-600';
+      case 'warning':
+        return 'border-l-amber-500';
+      case 'info':
+      default:
+        return 'border-l-zinc-900';
+    }
+  };
+
+  const getTag = (type: string) => {
+    switch (type) {
+      case 'success':
+        return 'OK';
+      case 'error':
+        return 'ERR';
+      case 'warning':
+        return 'WARN';
+      case 'info':
+      default:
+        return 'INFO';
+    }
   };
 
   return (
-    <div className="fixed top-20 right-4 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none">
+    <div className="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none font-sans">
       {toasts.map((toast) => {
-        const s = styles[toast.type] || styles.info;
+        const borderLeft = getBorderColor(toast.type);
+        const tag = getTag(toast.type);
+
         return (
           <div
             key={toast.id}
-            className="pointer-events-auto bg-nb-card text-nb-ink border-3 border-black shadow-brutal-lg p-4 flex items-start gap-3 transition-all animate-in slide-in-from-right"
+            className={`pointer-events-auto bg-white text-zinc-950 border border-zinc-900 border-l-[3px] ${borderLeft} p-3 flex items-start justify-between gap-3 transition-all animate-in slide-in-from-right`}
           >
-            <div className={`p-1.5 border-2 border-black ${s.bg} flex-shrink-0 shadow-brutal-sm`}>
-              {s.icon}
-            </div>
             <div className="flex-1 min-w-0">
-              <div className="font-mono font-black text-xs uppercase tracking-wider text-nb-ink">{toast.title}</div>
-              <div className="text-xs font-sans font-medium mt-1 leading-snug text-nb-ink/90">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                  [{tag}]
+                </span>
+                <span className="font-mono font-bold text-xs uppercase tracking-tight text-zinc-950 truncate">
+                  {toast.title}
+                </span>
+              </div>
+              <div className="text-xs text-zinc-600 font-normal mt-1 leading-snug">
                 {toast.message}
               </div>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="p-1 hover:bg-black hover:text-white transition-colors text-nb-ink"
-              aria-label="Tutup"
+              className="p-0.5 text-zinc-400 hover:text-zinc-950 transition-colors shrink-0"
+              aria-label="Tutup notifikasi"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5 stroke-[1.75]" />
             </button>
           </div>
         );

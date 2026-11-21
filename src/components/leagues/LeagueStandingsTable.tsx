@@ -1,7 +1,6 @@
 import React from 'react';
 import { League } from '../../types/league';
 import { calculateStandings } from '../../services/leagueService';
-import { Trophy, Crown, TrendingUp, Info } from 'lucide-react';
 
 interface LeagueStandingsTableProps {
   league: League;
@@ -10,65 +9,36 @@ interface LeagueStandingsTableProps {
 export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ league }) => {
   const standings = calculateStandings(league);
 
-  const getRankBadge = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return (
-          <span className="w-7 h-7 bg-nb-yellow text-black border-2 border-black font-black flex items-center justify-center text-xs shadow-brutal-sm">
-            <Crown className="w-3.5 h-3.5 mr-0.5" /> 1
-          </span>
-        );
-      case 2:
-        return (
-          <span className="w-7 h-7 bg-nb-cardAlt text-nb-ink border-2 border-black font-black flex items-center justify-center text-xs shadow-brutal-sm">
-            2
-          </span>
-        );
-      case 3:
-        return (
-          <span className="w-7 h-7 bg-nb-cardAlt text-nb-ink border-2 border-black font-black flex items-center justify-center text-xs shadow-brutal-sm">
-            3
-          </span>
-        );
-      default:
-        return (
-          <span className="w-7 h-7 bg-nb-bg text-nb-muted border border-black font-mono font-bold flex items-center justify-center text-xs">
-            {rank}
-          </span>
-        );
-    }
-  };
-
   const getFormBadge = (result: 'W' | 'D' | 'L', idx: number) => {
     switch (result) {
       case 'W':
         return (
           <span
             key={idx}
-            className="w-5 h-5 bg-nb-green text-black font-mono font-black text-[10px] border border-black flex items-center justify-center shadow-brutal-sm"
+            className="w-5 h-5 bg-emerald-600 text-white font-mono font-bold text-[10px] flex items-center justify-center rounded-none"
             title="Menang (Win)"
           >
-            M
+            W
           </span>
         );
       case 'D':
         return (
           <span
             key={idx}
-            className="w-5 h-5 bg-nb-cardAlt text-nb-ink font-mono font-black text-[10px] border border-black flex items-center justify-center shadow-brutal-sm"
+            className="w-5 h-5 bg-zinc-400 text-white font-mono font-bold text-[10px] flex items-center justify-center rounded-none"
             title="Seri (Draw)"
           >
-            S
+            D
           </span>
         );
       case 'L':
         return (
           <span
             key={idx}
-            className="w-5 h-5 bg-nb-red text-white font-mono font-black text-[10px] border border-black flex items-center justify-center shadow-brutal-sm"
+            className="w-5 h-5 bg-rose-600 text-white font-mono font-bold text-[10px] flex items-center justify-center rounded-none"
             title="Kalah (Loss)"
           >
-            K
+            L
           </span>
         );
     }
@@ -76,135 +46,86 @@ export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ leag
 
   if (standings.length === 0) {
     return (
-      <div className="bg-nb-card text-nb-ink border-3 border-black shadow-brutal p-12 text-center max-w-xl mx-auto font-sans">
-        <Trophy className="w-12 h-12 mx-auto mb-3 text-nb-yellow" />
-        <h3 className="font-mono font-black uppercase text-lg text-nb-ink">Klasemen Belum Tersedia</h3>
-        <p className="text-xs text-nb-muted font-sans font-medium mt-2 max-w-md mx-auto">
-          Belum ada tim yang didaftarkan ke dalam liga ini. Admin perlu menambahkan tim dan men-generate jadwal pekan untuk memulai klasemen.
+      <div className="bg-white border-[1.5px] border-zinc-400 p-10 text-center font-mono">
+        <div className="font-bold uppercase text-xs sm:text-sm text-zinc-950">Klasemen Belum Tersedia</div>
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-sans">
+          Daftarkan minimal 2 tim dan buat jadwal pertandingan untuk memulai klasemen kompetisi.
         </p>
       </div>
     );
   }
 
-  const leader = standings[0];
-
   return (
-    <div className="space-y-6">
-      {/* Current Leader Podium Spotlight */}
-      {leader && leader.played > 0 && (
-        <div className="bg-nb-yellow text-black border-3 border-black shadow-brutal-lg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-black text-nb-yellow border-3 border-black shadow-brutal-sm flex items-center justify-center flex-shrink-0 overflow-hidden">
-              {leader.logoUrl ? (
-                <img src={leader.logoUrl} alt={leader.teamName} className="w-full h-full object-cover" />
-              ) : (
-                <Crown className="w-8 h-8" />
-              )}
-            </div>
-            <div>
-              <span className="text-xs font-black uppercase tracking-wider block bg-black text-[#FAF6ED] px-2 py-0.5 w-fit mb-1 border border-black">
-                PEMIMPIN KLASEMEN SEMENTARA
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight">
-                {leader.teamName} {leader.tag && `(${leader.tag})`}
-              </h2>
-            </div>
+    <div className="space-y-3 font-sans">
+      {/* Standings Table Card Container (Swiss Grid Spec 5C) */}
+      <div className="bg-white border-[1.5px] border-zinc-400 overflow-hidden">
+        {/* Table Top Header Bar */}
+        <div className="px-5 py-3 border-b border-zinc-300 bg-zinc-50 flex flex-wrap items-center justify-between gap-2 font-mono text-xs sm:text-sm">
+          <div className="font-bold uppercase tracking-wider text-zinc-950">
+            Tabel Klasemen // {league.title}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-black text-[#FAF6ED] border-2 border-black p-3 text-center shadow-brutal-sm min-w-[90px]">
-              <div className="text-[10px] text-nb-muted uppercase font-bold">TOTAL POIN</div>
-              <div className="text-xl font-black text-nb-yellow">{leader.points} PTS</div>
-            </div>
-            <div className="bg-black text-[#FAF6ED] border-2 border-black p-3 text-center shadow-brutal-sm min-w-[90px]">
-              <div className="text-[10px] text-nb-muted uppercase font-bold">REKOR (M-S-K)</div>
-              <div className="text-sm font-black text-white">
-                {leader.won} - {leader.draw} - {leader.lost}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Standings Table Card */}
-      <div className="bg-nb-card border-3 border-black shadow-brutal overflow-hidden">
-        {/* Table Header Bar */}
-        <div className="p-4 border-b-3 border-black bg-nb-cardAlt flex flex-wrap items-center justify-between gap-2 font-mono">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-nb-yellow" />
-            <h3 className="text-sm font-black uppercase text-nb-ink">
-              Tabel Klasemen Resmi // {league.title}
-            </h3>
-          </div>
-          <div className="text-xs font-bold text-nb-muted flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 bg-nb-yellow border border-black inline-block" /> Zona Juara (#1)
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 bg-nb-green border border-black inline-block" /> Lolos Playoff (Top 4)
+          <div className="text-xs text-zinc-500 flex items-center gap-3">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 bg-emerald-500 inline-block" /> Zona Juara / Playoff
             </span>
           </div>
         </div>
 
-        {/* Scrollable Table Content */}
+        {/* Responsive Table Content */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left font-mono text-xs border-collapse">
+          <table className="w-full text-left font-mono text-xs sm:text-sm border-collapse">
             <thead>
-              <tr className="border-b-3 border-black bg-nb-bg text-nb-ink uppercase font-black text-[11px]">
-                <th className="py-3 px-3 text-center w-14">#</th>
-                <th className="py-3 px-4 min-w-[180px]">Tim / Klub</th>
-                <th className="py-3 px-3 text-center" title="Main (Played)">P</th>
-                <th className="py-3 px-3 text-center" title="Menang (Won)">M</th>
-                <th className="py-3 px-3 text-center" title="Seri (Draw)">S</th>
-                <th className="py-3 px-3 text-center" title="Kalah (Lost)">K</th>
-                <th className="py-3 px-3 text-center hidden md:table-cell" title="Gol/Ronde Memasukkan (Goals For)">GM</th>
-                <th className="py-3 px-3 text-center hidden md:table-cell" title="Gol/Ronde Kemasukan (Goals Against)">GK</th>
-                <th className="py-3 px-3 text-center" title="Selisih Gol/Ronde (Goal Difference)">+/-</th>
-                <th className="py-3 px-4 text-center bg-nb-yellow/15 border-l-2 border-r-2 border-black font-black text-sm">
-                  POIN
+              <tr className="border-b border-zinc-300 bg-zinc-50 text-xs font-mono uppercase text-zinc-500 font-semibold">
+                <th className="py-3.5 px-3 sm:px-4 text-center w-12">#</th>
+                <th className="py-3.5 px-4 sm:px-5 min-w-[200px] font-sans font-semibold">Tim</th>
+                <th className="py-3.5 px-3 text-center tabular-nums" title="Main (Played)">P</th>
+                <th className="py-3.5 px-3 text-center hidden sm:table-cell tabular-nums" title="Menang (Won)">W</th>
+                <th className="py-3.5 px-3 text-center hidden sm:table-cell tabular-nums" title="Seri (Draw)">D</th>
+                <th className="py-3.5 px-3 text-center hidden sm:table-cell tabular-nums" title="Kalah (Lost)">L</th>
+                <th className="py-3.5 px-3 text-center hidden md:table-cell tabular-nums" title="Gol Memasukkan : Kemasukan">GF:GA</th>
+                <th className="py-3.5 px-3 text-center tabular-nums" title="Selisih Gol (Goal Difference)">GD</th>
+                <th className="py-3.5 px-4 text-center bg-zinc-100 font-bold text-zinc-950 tabular-nums">
+                  PTS
                 </th>
-                <th className="py-3 px-4 text-center min-w-[120px]">5 Match Terakhir</th>
+                <th className="py-3.5 px-4 text-center hidden sm:table-cell min-w-[120px]">Form</th>
               </tr>
             </thead>
-            <tbody>
-              {standings.map((row, idx) => {
-                const isFirst = row.rank === 1;
+            <tbody className="divide-y divide-zinc-300">
+              {standings.map((row) => {
+                const isQualifyingZone = row.rank <= 4;
 
                 return (
                   <tr
                     key={row.teamId}
-                    className={`border-b-2 border-black last:border-b-0 transition-colors hover:bg-nb-cardHover ${
-                      isFirst ? 'bg-nb-yellow/10 font-bold' : idx % 2 === 0 ? 'bg-nb-card' : 'bg-nb-cardAlt/40'
+                    className={`transition-colors hover:bg-zinc-50/80 ${
+                      isQualifyingZone ? 'border-l-[4px] border-l-emerald-500' : 'border-l-[4px] border-l-transparent'
                     }`}
                   >
-                    {/* Rank */}
-                    <td className="py-3 px-3 text-center font-black">
-                      <div className="flex justify-center">{getRankBadge(row.rank)}</div>
+                    {/* Position Rank */}
+                    <td className="py-4 px-3 sm:px-4 text-center font-bold text-zinc-950 tabular-nums text-sm sm:text-base">
+                      {row.rank}
                     </td>
 
                     {/* Team Info */}
-                    <td className="py-3 px-4 font-bold text-nb-ink">
-                      <div className="flex items-center gap-2.5">
+                    <td className="py-4 px-4 sm:px-5">
+                      <div className="flex items-center gap-3">
                         {row.logoUrl ? (
                           <img
                             src={row.logoUrl}
                             alt={row.teamName}
-                            className="w-7 h-7 object-cover border-2 border-black shadow-brutal-sm bg-nb-card shrink-0"
+                            className="w-8 h-8 object-cover border border-zinc-300 bg-white shrink-0"
                           />
                         ) : (
-                          <div
-                            className={`w-7 h-7 border-2 border-black font-black flex items-center justify-center text-[11px] shadow-brutal-sm shrink-0 ${
-                              isFirst ? 'bg-nb-yellow text-black' : 'bg-nb-cardAlt text-nb-ink'
-                            }`}
-                          >
+                          <div className="w-8 h-8 bg-zinc-100 text-zinc-800 border border-zinc-300 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                             {row.tag || row.teamName.slice(0, 3).toUpperCase()}
                           </div>
                         )}
                         <div className="truncate">
-                          <span className="text-sm font-black text-nb-ink block leading-tight">
+                          <span className="font-sans font-semibold text-sm sm:text-base text-zinc-950 truncate block leading-tight">
                             {row.teamName}
                           </span>
                           {row.tag && (
-                            <span className="text-[10px] text-nb-muted font-mono font-bold block">
+                            <span className="text-xs text-zinc-400 font-mono leading-none block mt-0.5">
                               [{row.tag}]
                             </span>
                           )}
@@ -212,29 +133,44 @@ export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ leag
                       </div>
                     </td>
 
-                    {/* Stats */}
-                    <td className="py-3 px-3 text-center font-bold">{row.played}</td>
-                    <td className="py-3 px-3 text-center text-nb-green font-black">{row.won}</td>
-                    <td className="py-3 px-3 text-center text-nb-muted font-bold">{row.draw}</td>
-                    <td className="py-3 px-3 text-center text-nb-red font-bold">{row.lost}</td>
-                    <td className="py-3 px-3 text-center hidden md:table-cell text-nb-muted">{row.goalsFor}</td>
-                    <td className="py-3 px-3 text-center hidden md:table-cell text-nb-muted">{row.goalsAgainst}</td>
-                    <td className={`py-3 px-3 text-center font-bold ${
-                      row.goalDifference > 0 ? 'text-nb-green' : row.goalDifference < 0 ? 'text-nb-red' : 'text-nb-muted'
+                    {/* Played */}
+                    <td className="py-4 px-3 text-center font-medium text-zinc-700 tabular-nums text-sm sm:text-base">
+                      {row.played}
+                    </td>
+
+                    {/* Desktop Win / Draw / Loss */}
+                    <td className="py-4 px-3 text-center hidden sm:table-cell text-zinc-700 tabular-nums text-sm sm:text-base">
+                      {row.won}
+                    </td>
+                    <td className="py-4 px-3 text-center hidden sm:table-cell text-zinc-500 tabular-nums text-sm sm:text-base">
+                      {row.draw}
+                    </td>
+                    <td className="py-4 px-3 text-center hidden sm:table-cell text-zinc-500 tabular-nums text-sm sm:text-base">
+                      {row.lost}
+                    </td>
+
+                    {/* GF:GA Desktop */}
+                    <td className="py-4 px-3 text-center hidden md:table-cell text-zinc-500 tabular-nums text-xs sm:text-sm">
+                      {row.goalsFor}:{row.goalsAgainst}
+                    </td>
+
+                    {/* Goal Difference */}
+                    <td className={`py-4 px-3 text-center font-bold tabular-nums text-sm sm:text-base ${
+                      row.goalDifference > 0 ? 'text-emerald-600' : row.goalDifference < 0 ? 'text-rose-600' : 'text-zinc-500'
                     }`}>
                       {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
                     </td>
 
-                    {/* Points Column (Highlighted) */}
-                    <td className="py-3 px-4 text-center font-black text-base bg-nb-yellow/20 border-l-2 border-r-2 border-black text-nb-ink">
+                    {/* Points (PTS) */}
+                    <td className="py-4 px-4 text-center font-bold text-zinc-950 bg-zinc-100/70 tabular-nums text-sm sm:text-base">
                       {row.points}
                     </td>
 
-                    {/* Form badges */}
-                    <td className="py-3 px-4 text-center">
-                      <div className="flex items-center justify-center gap-1">
+                    {/* 5 Last Matches Form */}
+                    <td className="py-4 px-4 text-center hidden sm:table-cell">
+                      <div className="flex items-center justify-center gap-1.5">
                         {row.form.length === 0 ? (
-                          <span className="text-nb-muted text-[10px]">-</span>
+                          <span className="text-zinc-300 text-xs">-</span>
                         ) : (
                           row.form.map((res, fIdx) => getFormBadge(res, fIdx))
                         )}
@@ -248,13 +184,12 @@ export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({ leag
         </div>
 
         {/* Legend Footer Bar */}
-        <div className="p-3 border-t-3 border-black bg-nb-cardAlt flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-nb-muted font-bold">
-          <div className="flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-nb-yellow" />
-            <span>Sistem Poin: Menang = {league.pointsWin} Poin • Seri = {league.pointsDraw} Poin • Kalah = {league.pointsLoss} Poin</span>
+        <div className="px-5 py-2.5 border-t border-zinc-300 bg-zinc-50 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-zinc-500">
+          <div>
+            Poin: Menang = {league.pointsWin} • Seri = {league.pointsDraw} • Kalah = {league.pointsLoss}
           </div>
           <div>
-            Tie-Breaker: Poin ➔ Selisih Skor (+/-) ➔ Skor Memasukkan (GM) ➔ Head-to-Head
+            Tie-break: Poin ➔ Selisih Gol (GD) ➔ Memasukkan (GF)
           </div>
         </div>
       </div>

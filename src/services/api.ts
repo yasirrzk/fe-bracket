@@ -9,7 +9,7 @@ import {
   TournamentParticipant,
 } from '../types/tournament';
 import { LoginDto, RegisterDto, AuthResponse, UserRole } from '../types/auth';
-import { INITIAL_USERS } from './mockData';
+import { INITIAL_USERS, createInitialTournaments } from './mockData';
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'https://be-bracket.vercel.app';
@@ -142,16 +142,15 @@ class SimulatedTournamentEngine {
 
   constructor() {
     const saved = localStorage.getItem('simulated_tournaments_db');
-    const dummyIds = new Set(['tr-championship-2026', 'tr-apex-legends-open', 'tr-cs2-major-invitational']);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        this.tournaments = Array.isArray(parsed) ? parsed.filter((t: Tournament) => !dummyIds.has(t.id)) : [];
+        this.tournaments = Array.isArray(parsed) && parsed.length > 0 ? parsed : createInitialTournaments();
       } catch {
-        this.tournaments = [];
+        this.tournaments = createInitialTournaments();
       }
     } else {
-      this.tournaments = [];
+      this.tournaments = createInitialTournaments();
     }
     this.save();
   }
@@ -161,7 +160,7 @@ class SimulatedTournamentEngine {
   }
 
   reset() {
-    this.tournaments = [];
+    this.tournaments = createInitialTournaments();
     this.save();
   }
 

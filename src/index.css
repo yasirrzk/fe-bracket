@@ -3,189 +3,162 @@
 @tailwind utilities;
 
 :root {
-  /* Vintage Warm Parchment Theme (Default: Autentik Kertas & Poster Retro) */
-  --nb-bg: #EAE1D0;        /* Warm aged paper canvas - vintage, soft, not blinding white */
-  --nb-card: #FAF6ED;      /* Antique cream card surface */
-  --nb-card-alt: #DDD2BC;  /* Kraft paper tan surface for rows and inputs */
-  --nb-card-hover: #F2EADA;/* Hover surface */
-  --nb-text: #1C1917;      /* Deep retro ink text */
-  --nb-muted: #6B6152;     /* Aged graphite / sepia text */
-  --nb-border: #181512;    /* Dark ink brutalist border */
-  --nb-yellow: #DFA837;    /* Vintage 70s Mustard Gold */
-  --nb-yellow-hover: #CD9425;
-  --nb-red: #BA4A35;       /* Vintage Terracotta Brick */
-  --nb-green: #547746;     /* Vintage Olive Moss */
-  --nb-blue: #44697A;      /* Vintage Dusty Denim */
-}
-
-[data-theme="vintage-dark"] {
-  /* Vintage Dark Sepia Theme (Opsi Retro Gelap: Roasted Coffee & Warm Tobacco) */
-  --nb-bg: #1F1C19;        /* Warm roasted espresso */
-  --nb-card: #2B2622;      /* Vintage dark tobacco */
-  --nb-card-alt: #3A342E;  /* Aged walnut */
-  --nb-card-hover: #332C26;
-  --nb-text: #F5EEE2;      /* Warm cream text on dark */
-  --nb-muted: #A39786;     /* Sepia muted text */
-  --nb-border: #000000;
-  --nb-yellow: #E5A83B;
-  --nb-yellow-hover: #D19628;
-  --nb-red: #C8523F;
-  --nb-green: #6F9254;
-  --nb-blue: #5B8296;
+  /* Swiss Grid / Modern Scoreboard Color Tokens (DESIGN.md) */
+  --canvas: #F4F4F5;        /* Canvas: Main page background */
+  --surface: #FFFFFF;       /* Surface: Cards, tables, scoreboard */
+  --surface-hover: #FAFAFA; /* Surface Hover */
+  --ink-primary: #09090B;   /* Ink Primary: Titles, team names, scores */
+  --ink-secondary: #52525B; /* Ink Secondary: Subheaders, secondary stats */
+  --ink-muted: #A1A1AA;     /* Ink Muted: Timestamps, table headers */
+  --border-subtle: #E4E4E7; /* Border Subtle: Internal table rows, dividers */
+  --border-strong: #18181B; /* Border Strong: Active tabs, header border */
+  --accent-primary: #0052FF;/* Accent Primary: CTAs, active links */
 }
 
 body {
   margin: 0;
-  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  background-color: var(--nb-bg);
-  color: var(--nb-text);
+  font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+  background-color: var(--canvas);
+  color: var(--ink-primary);
   -webkit-font-smoothing: antialiased;
-  transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* Scrollbars */
+/* Minimalist Hairline Scrollbars (Anti-Slop) */
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--nb-bg);
-  border-left: 2px solid var(--nb-border);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--nb-yellow);
-  border: 2px solid var(--nb-border);
+  background: #D4D4D8;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--nb-yellow-hover);
+  background: #A1A1AA;
 }
 
-/* Vintage Neobrutalist Primitives */
+/* Mandatory Tabular Numbers for Scores & Metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Swiss Grid Clean Button & Input Standards (Replacing Old Neobrutalism) */
 .neo-box {
-  background: var(--nb-card);
-  color: var(--nb-text);
-  border: 3px solid var(--nb-border);
-  box-shadow: 4px 4px 0px 0px var(--nb-border);
-  transition: transform 120ms ease, box-shadow 120ms ease, background-color 150ms ease;
-}
-
-.neo-box:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--nb-border);
+  background: var(--surface);
+  color: var(--ink-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .neo-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-weight: 800;
+  gap: 0.375rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8125rem;
-  border: 3px solid var(--nb-border);
-  background: var(--nb-yellow);
-  color: #000000;
-  padding: 0.5rem 1.125rem;
-  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  letter-spacing: 0.04em;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-strong);
+  background: var(--border-strong);
+  color: #FFFFFF;
+  padding: 0.375rem 0.875rem;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 80ms ease, box-shadow 80ms ease, background-color 80ms ease;
+  transition: background-color 100ms ease;
 }
 
 .neo-btn:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px var(--nb-border);
-  background: var(--nb-yellow-hover);
+  background: #27272A;
 }
 
 .neo-btn:active:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px var(--nb-border);
+  background: #09090B;
 }
 
 .neo-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: 2px 2px 0px 0px var(--nb-border);
 }
 
 .neo-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-weight: 800;
+  gap: 0.375rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8125rem;
-  border: 3px solid var(--nb-border);
-  background: var(--nb-card-alt);
-  color: var(--nb-text);
-  padding: 0.5rem 1.125rem;
-  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  letter-spacing: 0.04em;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--ink-primary);
+  padding: 0.375rem 0.875rem;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 80ms ease, box-shadow 80ms ease, background-color 80ms ease;
+  transition: background-color 100ms ease, border-color 100ms ease;
 }
 
 .neo-btn-secondary:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px var(--nb-border);
-  background: var(--nb-card-hover);
+  background: var(--canvas);
+  border-color: #D4D4D8;
 }
 
 .neo-btn-secondary:active:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px var(--nb-border);
+  background: #E4E4E7;
 }
 
 .neo-btn-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-weight: 800;
+  gap: 0.375rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8125rem;
-  border: 3px solid var(--nb-border);
-  background: var(--nb-red);
-  color: #FAF6ED;
-  padding: 0.5rem 1.125rem;
-  box-shadow: 3px 3px 0px 0px var(--nb-border);
+  letter-spacing: 0.04em;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  border: 1px solid #E11D48;
+  background: #E11D48;
+  color: #FFFFFF;
+  padding: 0.375rem 0.875rem;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 80ms ease, box-shadow 80ms ease;
+  transition: opacity 100ms ease;
 }
 
 .neo-btn-danger:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px var(--nb-border);
-  opacity: 0.95;
+  opacity: 0.9;
 }
 
 .neo-input {
   width: 100%;
-  background: var(--nb-card-alt);
-  color: var(--nb-text);
-  border: 3px solid var(--nb-border);
-  padding: 0.625rem 0.875rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.875rem;
-  font-weight: 600;
+  background: var(--surface);
+  color: var(--ink-primary);
+  border: 1px solid var(--border-subtle);
+  padding: 0.5rem 0.75rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
   outline: none;
-  box-shadow: 3px 3px 0px 0px var(--nb-border);
-  transition: box-shadow 100ms ease, border-color 100ms ease, background-color 100ms ease;
+  border-radius: 0;
+  box-shadow: none;
+  transition: border-color 100ms ease;
 }
 
 .neo-input:focus {
-  box-shadow: 4px 4px 0px 0px var(--nb-yellow);
-  border-color: var(--nb-border);
-  background: var(--nb-card);
+  border-color: var(--border-strong);
 }
 
 .neo-input::placeholder {
-  color: var(--nb-muted);
-  font-weight: 500;
+  color: var(--ink-muted);
+  font-weight: 400;
 }

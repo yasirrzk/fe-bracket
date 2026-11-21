@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { leagueService } from '../../services/leagueService';
-import { X, ShieldAlert, Plus, TableProperties } from 'lucide-react';
+import { X } from 'lucide-react';
 import { CreateLeagueDto } from '../../types/league';
 
 interface CreateLeagueModalProps {
@@ -57,7 +57,7 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
 
       const newLeague = leagueService.createLeague(dto, role);
       showToast('success', 'Liga Berhasil Dibuat', `Liga "${newLeague.title}" siap didaftarkan tim.`);
-      
+
       setTitle('');
       setSeason('');
       setGame('');
@@ -72,39 +72,39 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-sans">
-      <div className="relative w-full max-w-lg bg-nb-card border-3 border-black shadow-brutal-lg animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 font-sans backdrop-blur-[1px]">
+      <div className="relative w-full max-w-lg bg-white border-2 border-zinc-900 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b-3 border-black bg-nb-cardAlt">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-nb-yellow border-2 border-black">
-              <TableProperties className="w-5 h-5 text-black" />
-            </div>
-            <div>
-              <h2 className="font-mono font-black text-sm uppercase text-nb-ink">Buat Kompetisi Liga Baru</h2>
-              <p className="text-[10px] font-mono font-bold text-nb-muted uppercase">Sistem Round-Robin & Klasemen Poin</p>
-            </div>
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-zinc-300 bg-white">
+          <div>
+            <h2 className="font-mono font-bold text-sm uppercase text-zinc-950">
+              Buat Kompetisi Liga Baru
+            </h2>
+            <p className="text-[10px] font-mono text-zinc-500 uppercase">
+              Sistem Round-Robin & Klasemen Poin
+            </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1 border-2 border-black bg-nb-card hover:bg-nb-red hover:text-white transition-colors"
+            className="p-1 text-zinc-400 hover:text-zinc-950 transition-colors"
+            aria-label="Tutup"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 stroke-[1.75]" />
           </button>
         </div>
 
         {/* Content Form */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-5 space-y-3.5">
           {!isAdmin && (
-            <div className="p-3 bg-nb-red/10 border-2 border-nb-red text-nb-red text-xs font-mono font-bold flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 shrink-0" />
-              <span>Akses Terbatas: Role USER tidak memiliki otoritas membuat liga baru.</span>
+            <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-mono">
+              Akses Terbatas: Role USER tidak memiliki otoritas membuat liga baru.
             </div>
           )}
 
           <div>
-            <label htmlFor="league-title" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
-              Nama Liga <span className="text-nb-red">*</span>
+            <label htmlFor="league-title" className="block text-[11px] font-mono font-semibold uppercase text-zinc-600 mb-1">
+              Nama Liga <span className="text-rose-600">*</span>
             </label>
             <input
               id="league-title"
@@ -114,14 +114,14 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               disabled={!isAdmin || isSubmitting}
-              className="w-full px-3 py-2 text-sm bg-nb-bg border-3 border-black font-sans font-bold text-nb-ink focus:outline-hidden focus:bg-nb-card disabled:opacity-60"
+              className="w-full px-3 py-2 text-xs bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden font-sans transition-colors"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="league-season" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
-                Musim / Edisi <span className="text-nb-red">*</span>
+              <label htmlFor="league-season" className="block text-[11px] font-mono font-semibold uppercase text-zinc-600 mb-1">
+                Musim / Edisi <span className="text-rose-600">*</span>
               </label>
               <input
                 id="league-season"
@@ -131,28 +131,28 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                 value={season}
                 onChange={(e) => setSeason(e.target.value)}
                 disabled={!isAdmin || isSubmitting}
-                className="w-full px-3 py-2 text-sm bg-nb-bg border-3 border-black font-mono font-bold text-nb-ink focus:outline-hidden focus:bg-nb-card disabled:opacity-60"
+                className="w-full px-3 py-2 text-xs bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden font-sans transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="league-game" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+              <label htmlFor="league-game" className="block text-[11px] font-mono font-semibold uppercase text-zinc-600 mb-1">
                 Cabang Game / Olahraga
               </label>
               <input
                 id="league-game"
                 type="text"
-                placeholder="contoh: VALORANT"
+                placeholder="contoh: eFootball Mobile"
                 value={game}
                 onChange={(e) => setGame(e.target.value)}
                 disabled={!isAdmin || isSubmitting}
-                className="w-full px-3 py-2 text-sm bg-nb-bg border-3 border-black font-sans font-bold text-nb-ink focus:outline-hidden focus:bg-nb-card disabled:opacity-60"
+                className="w-full px-3 py-2 text-xs bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden font-sans transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="league-description" className="block text-xs font-mono font-black uppercase text-nb-ink mb-1.5">
+            <label htmlFor="league-description" className="block text-[11px] font-mono font-semibold uppercase text-zinc-600 mb-1">
               Deskripsi / Aturan Kompetisi
             </label>
             <textarea
@@ -162,19 +162,19 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={!isAdmin || isSubmitting}
-              className="w-full px-3 py-2 text-xs bg-nb-bg border-3 border-black font-sans font-medium text-nb-ink focus:outline-hidden focus:bg-nb-card disabled:opacity-60 resize-none"
+              className="w-full px-3 py-2 text-xs bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden font-sans transition-colors resize-none"
             />
           </div>
 
           {/* Point Distribution Config */}
-          <div className="p-3.5 bg-nb-cardAlt border-2 border-black space-y-2">
-            <span className="block font-mono text-[11px] font-black uppercase text-nb-ink tracking-wider">
-              ⚙️ Pengaturan Skor Poin Klasemen
+          <div className="p-3 bg-zinc-50 border border-zinc-200 space-y-2">
+            <span className="block font-mono text-[10px] font-semibold uppercase text-zinc-500 tracking-wider">
+              Distribusi Poin Klasemen
             </span>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2.5">
               <div>
-                <label htmlFor="league-points-win" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
-                  Poin Menang (W)
+                <label htmlFor="league-points-win" className="block text-[10px] font-mono text-zinc-500 uppercase mb-1">
+                  Menang (W)
                 </label>
                 <input
                   id="league-points-win"
@@ -184,12 +184,12 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                   value={pointsWin}
                   onChange={(e) => setPointsWin(Number(e.target.value))}
                   disabled={!isAdmin || isSubmitting}
-                  className="w-full px-2.5 py-1.5 text-center font-mono font-black text-sm bg-nb-bg border-2 border-black text-nb-ink"
+                  className="w-full px-2 py-1 text-center font-mono font-bold text-xs bg-white border border-zinc-300 text-zinc-950 tabular-nums"
                 />
               </div>
               <div>
-                <label htmlFor="league-points-draw" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
-                  Poin Seri (D)
+                <label htmlFor="league-points-draw" className="block text-[10px] font-mono text-zinc-500 uppercase mb-1">
+                  Seri (D)
                 </label>
                 <input
                   id="league-points-draw"
@@ -199,12 +199,12 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                   value={pointsDraw}
                   onChange={(e) => setPointsDraw(Number(e.target.value))}
                   disabled={!isAdmin || isSubmitting}
-                  className="w-full px-2.5 py-1.5 text-center font-mono font-black text-sm bg-nb-bg border-2 border-black text-nb-ink"
+                  className="w-full px-2 py-1 text-center font-mono font-bold text-xs bg-white border border-zinc-300 text-zinc-950 tabular-nums"
                 />
               </div>
               <div>
-                <label htmlFor="league-points-loss" className="block text-[10px] font-mono font-bold text-nb-muted uppercase mb-1">
-                  Poin Kalah (L)
+                <label htmlFor="league-points-loss" className="block text-[10px] font-mono text-zinc-500 uppercase mb-1">
+                  Kalah (L)
                 </label>
                 <input
                   id="league-points-loss"
@@ -214,32 +214,31 @@ export const CreateLeagueModal: React.FC<CreateLeagueModalProps> = ({
                   value={pointsLoss}
                   onChange={(e) => setPointsLoss(Number(e.target.value))}
                   disabled={!isAdmin || isSubmitting}
-                  className="w-full px-2.5 py-1.5 text-center font-mono font-black text-sm bg-nb-bg border-2 border-black text-nb-ink"
+                  className="w-full px-2 py-1 text-center font-mono font-bold text-xs bg-white border border-zinc-300 text-zinc-950 tabular-nums"
                 />
               </div>
             </div>
-            <p className="text-[10px] font-mono text-nb-muted">
-              Standar FIFA/Esports: Menang 3 Poin, Seri 1 Poin, Kalah 0 Poin.
+            <p className="text-[10px] font-mono text-zinc-400">
+              Standar: Menang 3 Poin, Seri 1 Poin, Kalah 0 Poin.
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t-2 border-black">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-zinc-200 font-mono text-xs">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 border-2 border-black bg-nb-cardAlt text-xs font-mono font-black uppercase hover:bg-black/10 transition-colors"
+              className="px-3 py-1.5 border border-zinc-200 text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors font-semibold"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={!isAdmin || isSubmitting || !title.trim()}
-              className="px-5 py-2 border-3 border-black bg-nb-yellow text-black text-xs font-mono font-black uppercase shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
+              className="px-4 py-1.5 bg-zinc-950 text-white hover:bg-zinc-800 border border-zinc-950 transition-colors font-semibold disabled:opacity-50"
             >
-              <Plus className="w-4 h-4" />
-              <span>{isSubmitting ? 'Membuat...' : 'Buat Liga Sekarang'}</span>
+              {isSubmitting ? 'Membuat...' : 'Buat Liga'}
             </button>
           </div>
         </form>

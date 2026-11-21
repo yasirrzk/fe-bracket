@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types/auth';
-import { X, Lock, Mail, User, Shield } from 'lucide-react';
+import { X } from 'lucide-react';
 import { INITIAL_USERS } from '../../services/mockData';
 
 export const AuthModal: React.FC = () => {
@@ -30,109 +30,110 @@ export const AuthModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-nb-card text-nb-ink border-3 border-black shadow-brutal-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in-95 font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 font-sans backdrop-blur-[1px]">
+      <div className="bg-white text-zinc-950 border-2 border-zinc-900 max-w-md w-full p-5 sm:p-6 relative animate-in fade-in zoom-in-95">
         <button
           onClick={closeAuthModal}
-          className="absolute top-4 right-4 p-1 hover:bg-black hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-1 text-zinc-400 hover:text-zinc-950 transition-colors"
           aria-label="Tutup"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 stroke-[1.75]" />
         </button>
 
-        {/* Tab Headers */}
-        <div className="flex border-b-3 border-black mb-6 gap-2">
+        {/* Flat Underline Tab Headers */}
+        <div className="flex border-b border-zinc-300 mb-5 gap-4 font-mono text-xs">
           <button
+            type="button"
             onClick={() => setMode('login')}
-            className={`px-5 py-2.5 font-mono text-xs font-black uppercase -mb-[3px] border-3 border-black transition-all ${
+            className={`pb-2 font-semibold uppercase tracking-wider transition-colors -mb-[1px] ${
               mode === 'login'
-                ? 'bg-nb-yellow text-black shadow-brutal border-b-nb-yellow'
-                : 'bg-nb-cardAlt text-nb-ink hover:bg-nb-cardHover'
+                ? 'border-b-2 border-zinc-950 text-zinc-950 font-bold'
+                : 'text-zinc-500 hover:text-zinc-950 border-b-2 border-transparent'
             }`}
           >
-            Masuk // Login
+            Masuk / Login
           </button>
           <button
+            type="button"
             onClick={() => setMode('register')}
-            className={`px-5 py-2.5 font-mono text-xs font-black uppercase -mb-[3px] border-3 border-black transition-all ${
+            className={`pb-2 font-semibold uppercase tracking-wider transition-colors -mb-[1px] ${
               mode === 'register'
-                ? 'bg-nb-yellow text-black shadow-brutal border-b-nb-yellow'
-                : 'bg-nb-cardAlt text-nb-ink hover:bg-nb-cardHover'
+                ? 'border-b-2 border-zinc-950 text-zinc-950 font-bold'
+                : 'text-zinc-500 hover:text-zinc-950 border-b-2 border-transparent'
             }`}
           >
             Daftar Akun Baru
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           {mode === 'register' && (
             <div>
-              <label className="block text-xs font-mono font-black uppercase mb-1 text-nb-ink">Username</label>
-              <div className="relative">
-                <User className="w-4 h-4 absolute left-3 top-3 text-nb-muted" />
-                <input
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. esport_fan"
-                  className="neo-input pl-10"
-                />
-              </div>
+              <label htmlFor="auth-username" className="block text-[11px] font-mono font-semibold uppercase mb-1 text-zinc-600">
+                Username
+              </label>
+              <input
+                id="auth-username"
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="contoh: esport_pro"
+                className="w-full px-3 py-2 text-xs font-mono bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden transition-colors"
+              />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono font-black uppercase mb-1 text-nb-ink">Email Address</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-3 text-nb-muted" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@bracketops.gg"
-                className="neo-input pl-10"
-              />
-            </div>
+            <label htmlFor="auth-email" className="block text-[11px] font-mono font-semibold uppercase mb-1 text-zinc-600">
+              Email Address
+            </label>
+            <input
+              id="auth-email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="nama@bracketops.gg"
+              className="w-full px-3 py-2 text-xs font-mono bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden transition-colors"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-mono font-black uppercase mb-1 text-nb-ink">Password</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-3 text-nb-muted" />
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="neo-input pl-10"
-              />
-            </div>
+            <label htmlFor="auth-password" className="block text-[11px] font-mono font-semibold uppercase mb-1 text-zinc-600">
+              Password
+            </label>
+            <input
+              id="auth-password"
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-3 py-2 text-xs font-mono bg-white border border-zinc-300 focus:border-zinc-950 text-zinc-950 outline-hidden transition-colors"
+            />
           </div>
 
           {mode === 'register' && (
             <div>
-              <label className="block text-xs font-mono font-black uppercase mb-1 flex items-center gap-1.5 text-nb-ink">
-                <Shield className="w-3.5 h-3.5 text-nb-yellow" />
+              <label className="block text-[11px] font-mono font-semibold uppercase mb-1 text-zinc-600">
                 Pilih Role User
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {(['USER', 'ADMIN'] as UserRole[]).map((r) => (
                   <button
                     type="button"
                     key={r}
                     onClick={() => setRole(r)}
-                    className={`p-3 border-3 border-black font-mono text-xs font-black uppercase transition-all text-center ${
+                    className={`p-2.5 border font-mono text-xs uppercase transition-colors text-center ${
                       role === r
-                        ? 'bg-nb-yellow text-black shadow-brutal translate-x-[-1px] translate-y-[-1px]'
-                        : 'bg-nb-cardAlt text-nb-ink hover:bg-nb-cardHover shadow-brutal-sm'
+                        ? 'border-zinc-950 bg-zinc-100 font-bold text-zinc-950'
+                        : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50'
                     }`}
                   >
-                    <div>{r === 'ADMIN' ? '★ ADMIN' : '👤 USER BIASA'}</div>
-                    <div className={`text-[10px] font-medium lowercase mt-0.5 ${role === r ? 'text-black/80' : 'text-nb-muted'}`}>
+                    <div>{r}</div>
+                    <div className="text-[10px] normal-case text-zinc-500 mt-0.5">
                       {r === 'ADMIN' ? 'buat liga & kelola jadwal' : 'lihat list & klasemen'}
                     </div>
                   </button>
@@ -144,31 +145,32 @@ export const AuthModal: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="neo-btn w-full mt-4 py-3 text-xs"
+            className="w-full mt-2 py-2.5 bg-zinc-950 text-white hover:bg-zinc-800 border border-zinc-950 font-mono text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-50"
           >
-            {isLoading ? 'MEMPROSES...' : mode === 'login' ? 'MASUK KE ENGINE' : 'BUAT AKUN BARU'}
+            {isLoading ? 'Memproses...' : mode === 'login' ? 'Masuk ke Engine' : 'Buat Akun'}
           </button>
         </form>
 
         {/* Quick Testing Switcher */}
-        <div className="mt-6 pt-4 border-t-3 border-black">
-          <div className="text-[11px] font-mono font-black uppercase text-nb-muted mb-2">
-            ⚡ Quick-Switch Akun Uji Coba:
+        <div className="mt-5 pt-3.5 border-t border-zinc-200 font-mono text-xs">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+            Akun Uji Coba Cepat:
           </div>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {INITIAL_USERS.slice(0, 2).map((u) => (
               <button
                 key={u.id}
+                type="button"
                 onClick={() => {
                   switchRole(u.role);
                   closeAuthModal();
                 }}
-                className="p-2.5 bg-nb-cardAlt border-2 border-black text-left font-mono hover:bg-nb-yellow hover:text-black transition-all shadow-brutal-sm active:translate-y-0.5 text-nb-ink"
+                className="p-2 border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-left transition-colors"
               >
-                <div className={`text-xs font-black ${u.role === 'ADMIN' ? 'text-nb-red' : 'text-nb-yellow'}`}>
-                  {u.role === 'ADMIN' ? '★ ADMIN' : '👤 USER BIASA'}
+                <div className="text-[11px] font-bold text-zinc-950">
+                  {u.role === 'ADMIN' ? 'ADMIN' : 'USER'}
                 </div>
-                <div className="text-nb-muted text-[11px] truncate font-bold">{u.username}</div>
+                <div className="text-zinc-500 text-[10px] truncate">{u.username}</div>
               </button>
             ))}
           </div>
